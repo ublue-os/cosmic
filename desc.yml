@@ -1,0 +1,3 @@
+name: infinity
+description: Fedora based ostree image with the COSMIC desktop environment
+image-version: 39
