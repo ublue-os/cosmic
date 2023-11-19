@@ -69,8 +69,8 @@ jobs:
 
           # Using clever bash string templating, https://stackoverflow.com/q/40771781
           # don't make malformed tags if $MAJOR_VERSION is empty (base-image didn't include proper labels) --
-          COMMIT_TAGS+=("pr-${{ github.event.number }}${MAJOR_VERSION:+-$MAJOR_VERSION}")
-          COMMIT_TAGS+=("${SHA_SHORT}${MAJOR_VERSION:+-$MAJOR_VERSION}")
+          COMMIT_TAGS+=("pr-${{ github.event.number }}${MAJOR_VERSION:+-$MAJOR_VERSION}-${{ matrix.arch }}")
+          COMMIT_TAGS+=("${SHA_SHORT}${MAJOR_VERSION:+-$MAJOR_VERSION}-${{ matrix.arch }}")
 
           BUILD_TAGS=("${MAJOR_VERSION}-${{ matrix.arch }}" "${MAJOR_VERSION:+$MAJOR_VERSION-}${TIMESTAMP}-${{ matrix.arch }}")
           # --
@@ -90,7 +90,7 @@ jobs:
           echo "Generated the following build tags: "
           for TAG in "${BUILD_TAGS[@]}"; do
               echo "${TAG}"
-          don
+          done
           echo "alias_tags=${alias_tags[*]}" >> $GITHUB_OUTPUT
 
       # Build metadata
