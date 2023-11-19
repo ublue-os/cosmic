@@ -136,7 +136,6 @@ jobs:
           tags: |
             ${{ steps.generate-tags.outputs.alias_tags }}
           archs: ${{ matrix.arch }}
-          platform: linux/${{ matrix.arch }}
           build-args: |
             IMAGE_MAJOR_VERSION=${{ env.IMAGE_MAJOR_VERSION }}
             IMAGE_REGISTRY=${{ steps.registry_case.outputs.lowercase }}
