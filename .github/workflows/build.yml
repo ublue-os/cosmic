@@ -25,6 +25,8 @@ jobs:
       id-token: write
     strategy:
       fail-fast: false
+      matrix:
+        arch: [amd64, arm64]
 
     steps:
       - name: Maximize build space
@@ -70,11 +72,11 @@ jobs:
           COMMIT_TAGS+=("pr-${{ github.event.number }}${MAJOR_VERSION:+-$MAJOR_VERSION}")
           COMMIT_TAGS+=("${SHA_SHORT}${MAJOR_VERSION:+-$MAJOR_VERSION}")
 
-          BUILD_TAGS=("${MAJOR_VERSION}" "${MAJOR_VERSION:+$MAJOR_VERSION-}${TIMESTAMP}")
+          BUILD_TAGS=("${MAJOR_VERSION}-${{ matrix.arch }}" "${MAJOR_VERSION:+$MAJOR_VERSION-}${TIMESTAMP}-${{ matrix.arch }}")
           # --
 
-          BUILD_TAGS+=("${TIMESTAMP}")
-          BUILD_TAGS+=("latest")
+          BUILD_TAGS+=("${TIMESTAMP}-${{ matrix.arch }}")
+          BUILD_TAGS+=("latest-${{ matrix.arch }}")
 
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
               echo "Generated the following commit tags: "
@@ -131,9 +133,10 @@ jobs:
           containerfiles: |
             ./Containerfile
           image: ${{ env.IMAGE_NAME }}
-          archs: amd64, arm64
           tags: |
             ${{ steps.generate-tags.outputs.alias_tags }}
+          archs: ${{ matrix.arch }}
+          platform: linux/${{ matrix.arch }}
           build-args: |
             IMAGE_MAJOR_VERSION=${{ env.IMAGE_MAJOR_VERSION }}
             IMAGE_REGISTRY=${{ steps.registry_case.outputs.lowercase }}
