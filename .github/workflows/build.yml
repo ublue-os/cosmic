@@ -118,6 +118,11 @@ jobs:
         with:
           string: ${{ env.IMAGE_NAME }}
 
+      - name: Install qemu dependency
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-user-static
+
       # Build image using Buildah action
       - name: Build Image
         id: build_image
@@ -126,7 +131,7 @@ jobs:
           containerfiles: |
             ./Containerfile
           image: ${{ env.IMAGE_NAME }}
-          platforms: linux/amd64, linux/arm64
+          archs: amd64, arm64
           tags: |
             ${{ steps.generate-tags.outputs.alias_tags }}
           build-args: |
