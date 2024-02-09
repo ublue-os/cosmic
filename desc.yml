@@ -1,5 +1,5 @@
-title: Fedora COSMIC Atomic
-name: fedora-cosmic-atomic
+title: Infinity
+name: infinity
 description: Fedora based ostree image with the COSMIC desktop environment
 image-registry: ghcr.io
 image-version: 39
