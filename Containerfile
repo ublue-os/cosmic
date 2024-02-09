@@ -59,9 +59,9 @@ RUN rpm-ostree install \
 	cage \
         mozilla-fira-mono-fonts \
         mozilla-fira-sans-fonts \
-        gdm
+        sddm
 
-# TODO: Remove GDM once cosmic-greeter is stable
+# TODO: Remove SDDM once cosmic-greeter is stable
 
 # Copy COSMIC
 COPY --from=cosmic-builder /cosmic-epoch/cosmic-sysext/usr /usr
@@ -96,8 +96,7 @@ COPY --from=wallpapers-builder /system76-wallpapers/backgrounds /usr/share/backg
 # RUN ln -s /usr/lib/systemd/system/gdm.service /etc/systemd/system/display-manager.service
 # RUN rm -rf /var/lib/greetd
 
-# TODO: Revisit once cosmic-session is stable
-RUN systemctl enable gdm.service
+# TODO: Reenable once cosmic-greeter is reenabled
 
 RUN rpm-ostree cleanup -m && ostree container commit
 

@@ -12,4 +12,4 @@ This project has no association with **System76** and is not an officially endor
 
 Thanks to Drakulix for the original image. This image is up-to-date and makes some different decisions:
 * The image is based on Fedora's Base image instead of SilverBlue
-* `cosmic-greeter` is swapped out with `GDM` for the time being, as there's a problem that doesn't let cosmic-greeter start at the moment (see: https://github.com/pop-os/cosmic-greeter/issues/8)
+* `cosmic-greeter` is swapped out with `SDDM` for the time being, as there's a problem that doesn't let cosmic-greeter start at the moment (see: https://github.com/pop-os/cosmic-greeter/issues/8)
