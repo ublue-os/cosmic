@@ -94,7 +94,8 @@ RUN ln -s /usr/bin/pop-launcher /usr/lib/pop-launcher/plugins/web/web
 COPY --from=wallpapers-builder /system76-wallpapers/backgrounds /usr/share/backgrounds/pop
 
 # RUN ln -s /usr/lib/systemd/system/gdm.service /etc/systemd/system/display-manager.service
-# RUN rm -rf /var/lib/greetd
+
+RUN rm -rf /var/lib/greetd
 
 # TODO: Reenable once cosmic-greeter is reenabled
 
