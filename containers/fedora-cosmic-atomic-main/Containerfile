@@ -23,7 +23,8 @@ RUN dnf install -y  git \
                     mesa-libgbm-devel \
                     pipewire-devel \
                     pam-devel \
-                    flatpak-devel
+                    flatpak-devel \
+                    rust-rav1e+nasm-rs-devel
 RUN git clone --recurse-submodules https://github.com/pop-os/cosmic-epoch
 # This is where the magic happens
 RUN cd cosmic-epoch && git submodule update --remote && just sysext && rm -rf cosmic-sysext/usr/lib/extension-release.d
@@ -60,7 +61,6 @@ RUN rpm-ostree install \
 	cage \
         mozilla-fira-mono-fonts \
         mozilla-fira-sans-fonts \
-        rust-rav1e+nasm-rs-devel \
         sddm
 
 # TODO: Remove SDDM once cosmic-greeter is stable
