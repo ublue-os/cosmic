@@ -26,8 +26,7 @@ RUN dnf install -y  git \
                     flatpak-devel
 RUN git clone --recurse-submodules https://github.com/pop-os/cosmic-epoch
 # This is where the magic happens
-RUN git submodule update --remote
-RUN cd cosmic-epoch && just sysext && rm -rf cosmic-sysext/usr/lib/extension-release.d
+RUN cd cosmic-epoch && git submodule update --remote && just sysext && rm -rf cosmic-sysext/usr/lib/extension-release.d
 
 
 FROM registry.fedoraproject.org/fedora:${IMAGE_MAJOR_VERSION} AS launcher-builder

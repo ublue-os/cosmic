@@ -1,11 +1,5 @@
-name: build
-on: # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
-  push:
-    branches:
-      - main
-    paths-ignore: # don't rebuild if only documentation has changed
-      - "**.md"
-  pull_request:
+name: build_main
+on:
   workflow_dispatch:
 
 env:
