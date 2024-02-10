@@ -46,9 +46,9 @@ jobs:
 
       - name: Gather image data from description
         run: |
-          echo "IMAGE_NAME=$(yq '.name' ./containers/fedora-cosmic-atomic/desc.yml)" >> $GITHUB_ENV
-          echo "IMAGE_DESCRIPTION=$(yq '.description' ./containers/fedora-cosmic-atomic/desc.yml)" >> $GITHUB_ENV
-          echo "IMAGE_MAJOR_VERSION=$(yq '.image-version' ./containers/fedora-cosmic-atomic/desc.yml)" >> $GITHUB_ENV
+          echo "IMAGE_NAME=$(yq '.name' ./containers/fedora-cosmic-atomic-main/desc.yml)" >> $GITHUB_ENV
+          echo "IMAGE_DESCRIPTION=$(yq '.description' ./containers/fedora-cosmic-atomic-main/desc.yml)" >> $GITHUB_ENV
+          echo "IMAGE_MAJOR_VERSION=$(yq '.image-version' ./containers/fedora-cosmic-atomic-main/desc.yml)" >> $GITHUB_ENV
 
       - name: Get current version
         id: labels
@@ -133,7 +133,7 @@ jobs:
         uses: redhat-actions/buildah-build@v2
         with:
           containerfiles: |
-            ./containers/fedora-cosmic-atomic/Containerfile
+            ./containers/fedora-cosmic-atomic-main/Containerfile
           image: ${{ env.IMAGE_NAME }}
           tags: |
             ${{ steps.generate-tags.outputs.alias_tags }}
