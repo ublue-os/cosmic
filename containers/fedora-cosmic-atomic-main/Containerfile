@@ -60,7 +60,7 @@ RUN rpm-ostree install \
 	cage \
         mozilla-fira-mono-fonts \
         mozilla-fira-sans-fonts \
-        nasm \
+        rust-rav1e+nasm-rs-devel \
         sddm
 
 # TODO: Remove SDDM once cosmic-greeter is stable
