@@ -60,8 +60,13 @@ RUN rpm-ostree install \
         greetd-selinux \
 	cage \
         mozilla-fira-mono-fonts \
-        mozilla-fira-sans-fonts \
-        sddm
+        mozilla-fira-sans-fonts
+
+# Optional dependencies (may be removed once they are no longer needed)
+RUN rpm-ostree install \
+        sddm \
+        tuned
+
 # sddm for now, until cosmic-session is mature
 
 # Copy COSMIC
