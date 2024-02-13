@@ -62,16 +62,6 @@ RUN rpm-ostree install \
         mozilla-fira-mono-fonts \
         mozilla-fira-sans-fonts
 
-# Optional dependencies (may be removed once they are no longer needed)
-RUN rpm-ostree install \
-        sddm \
-        gnome-keyring
-
-# sddm: temporary display manager until cosmic-session starts without error
-# gnome-keyring: keyring support
-
-# sddm for now, until cosmic-session is mature
-
 # Copy COSMIC to base-main
 COPY --from=cosmic-builder /cosmic-epoch/cosmic-sysext/usr /usr
 COPY --from=cosmic-builder /cosmic-epoch/cosmic-comp/config.ron /usr/etc/cosmic-comp/config.ron
