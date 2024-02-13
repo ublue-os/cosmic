@@ -64,11 +64,11 @@ RUN rpm-ostree install \
 
 # Optional dependencies (may be removed once they are no longer needed)
 RUN rpm-ostree install \
-        gdm \
+        sddm \
         gnome-keyring
 
+# sddm: temporary display manager until cosmic-session starts without error
 # gnome-keyring: keyring support
-# gdm: temporary display manager until cosmic-session starts without error
 
 # sddm for now, until cosmic-session is mature
 
