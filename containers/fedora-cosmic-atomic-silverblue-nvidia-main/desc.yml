@@ -1,0 +1,5 @@
+title: Fedora COSMIC Atomic Silverblue Nvidia Main
+name: fedora-cosmic-atomic-silverblue-nvidia-main
+description: Fedora COSMIC Atomic Silverblue Main ships the pre-alpha COSMIC desktop environment in an atomic fashion, with all the submodules updated to their master/main branch, with a Silverblue base, and with nvidia drivers.
+image-registry: ghcr.io
+image-version: 39
