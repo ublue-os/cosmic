@@ -99,7 +99,7 @@ jobs:
             org.opencontainers.image.title=${{ env.IMAGE_NAME }}
             org.opencontainers.image.version=${{ steps.labels.outputs.VERSION }}
             org.opencontainers.image.description=${{ env.IMAGE_DESCRIPTION }}
-            io.artifacthub.package.readme-url=https://raw.githubusercontent.com/ryanabx/infinity/main/README.md
+            io.artifacthub.package.readme-url=https://raw.githubusercontent.com/ryanabx/fedora-cosmic-atomic/main/README.md
             io.artifacthub.package.logo-url=https://avatars.githubusercontent.com/u/56272643?s=200&v=4
 
       # Workaround bug where capital letters in your GitHub username make it impossible to push to GHCR.

@@ -1,5 +1,0 @@
-title: Fedora COSMIC Atomic Silverblue Main
-name: fedora-cosmic-atomic-silverblue-main
-description: Fedora COSMIC Atomic Silverblue Main ships the pre-alpha COSMIC desktop environment in an atomic fashion, with all the submodules updated to their master/main branch, with a Silverblue base.
-image-registry: ghcr.io
-image-version: 39
