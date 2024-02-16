@@ -41,6 +41,6 @@ RUN cd launcher && just build-release
 
 RUN cd ..
 
-RUN dnf update -y
-RUN dnf install -y  git 
-RUN git clone --recurse-submodules https://github.com/pop-os/system76-wallpapers
+# RUN dnf update -y
+# RUN dnf install -y  git 
+# RUN git clone --recurse-submodules https://github.com/pop-os/system76-wallpapers

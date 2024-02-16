@@ -44,7 +44,7 @@ RUN ln -s /usr/bin/pop-launcher /usr/lib/pop-launcher/plugins/terminal/terminal
 COPY --from=cosmic-builder /launcher/plugins/src/web/plugin.ron /usr/lib/pop-launcher/plugins/web/plugin.ron
 RUN ln -s /usr/bin/pop-launcher /usr/lib/pop-launcher/plugins/web/web
 
-COPY --from=cosmic-builder /system76-wallpapers/backgrounds /usr/share/backgrounds/pop
+# COPY --from=cosmic-builder /system76-wallpapers/backgrounds /usr/share/backgrounds/pop
 
 # RUN ln -s /usr/lib/systemd/system/cosmic-greeter.service /etc/systemd/system/display-manager.service
 RUN rm -rf /var/lib/greetd
