@@ -1,5 +1,0 @@
-title: COSMIC Compiled
-name: cosmic-compiled
-description: Image with artifacts compiled from latest COSMIC commits.
-image-registry: ghcr.io
-image-version: 39
