@@ -1,7 +1,7 @@
 ARG IMAGE_MAJOR_VERSION=39
 ARG BASE_IMAGE_URL=quay.io/fedora-ostree-desktops/base
 
-FROM ghcr.io/ryanabx/fdcos-compiled:latest-amd64 AS cosmic-builder
+FROM ghcr.io/ryanabx/fedora-cosmic-artifacts:latest-amd64 AS cosmic-builder
 
 FROM registry.fedoraproject.org/fedora:${IMAGE_MAJOR_VERSION} AS launcher-builder
 
@@ -33,7 +33,8 @@ RUN rpm-ostree install \
         greetd-selinux \
 	cage \
         mozilla-fira-mono-fonts \
-        mozilla-fira-sans-fonts
+        mozilla-fira-sans-fonts \
+        sddm
 
 # Copy COSMIC
 COPY --from=cosmic-builder /cosmic-epoch/cosmic-sysext/usr /usr
@@ -65,7 +66,7 @@ RUN ln -s /usr/bin/pop-launcher /usr/lib/pop-launcher/plugins/web/web
 
 COPY --from=wallpapers-builder /system76-wallpapers/backgrounds /usr/share/backgrounds/pop
 
-RUN ln -s /usr/lib/systemd/system/cosmic-greeter.service /etc/systemd/system/display-manager.service
+# RUN ln -s /usr/lib/systemd/system/cosmic-greeter.service /etc/systemd/system/display-manager.service
 RUN rm -rf /var/lib/greetd
 
 RUN rpm-ostree cleanup -m && ostree container commit

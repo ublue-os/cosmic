@@ -1,7 +1,7 @@
 ARG IMAGE_MAJOR_VERSION=39
 ARG BASE_IMAGE_URL=ghcr.io/ublue-os/silverblue-nvidia
 
-FROM ghcr.io/ryanabx/fdcos-compiled:latest-amd64 AS cosmic-builder
+FROM ghcr.io/ryanabx/fedora-cosmic-artifacts:latest-amd64 AS cosmic-builder
 
 FROM registry.fedoraproject.org/fedora:${IMAGE_MAJOR_VERSION} AS launcher-builder
 

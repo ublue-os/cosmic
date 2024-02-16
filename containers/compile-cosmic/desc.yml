@@ -1,5 +1,5 @@
 title: Fedora w/ COSMIC Compiled
-name: fdcos-compiled
+name: fedora-cosmic-artifacts
 description: Not intended for atomic desktop use. Fedora image with COSMIC artifacts.
 image-registry: ghcr.io
 image-version: 39
