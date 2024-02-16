@@ -1,34 +1,7 @@
 ARG IMAGE_MAJOR_VERSION=39
 ARG BASE_IMAGE_URL=ghcr.io/ublue-os/silverblue-nvidia
 
-FROM registry.fedoraproject.org/fedora:${IMAGE_MAJOR_VERSION} AS cosmic-builder
-
-RUN dnf update -y
-RUN dnf install -y  git \
-                    make \
-                    which \
-                    just \
-                    rustc \
-                    libglvnd-devel \
-                    libseat-devel \
-                    libxkbcommon-devel \
-                    lld \
-                    libinput-devel \
-                    glib2-devel \
-                    gtk3-devel \
-                    dbus-devel \
-                    wayland-devel \
-                    clang-devel \
-                    cargo \
-                    mesa-libgbm-devel \
-                    pipewire-devel \
-                    pam-devel \
-                    flatpak-devel \
-                    rust-rav1e+nasm-rs-devel
-RUN git clone --recurse-submodules https://github.com/pop-os/cosmic-epoch
-# This is where the magic happens
-RUN cd cosmic-epoch && git submodule update --remote && just sysext && rm -rf cosmic-sysext/usr/lib/extension-release.d
-
+FROM ghcr.io/ryanabx/fdcos-compiled:latest-amd64 AS cosmic-builder
 
 FROM registry.fedoraproject.org/fedora:${IMAGE_MAJOR_VERSION} AS launcher-builder
 
