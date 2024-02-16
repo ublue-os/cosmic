@@ -26,3 +26,21 @@ RUN dnf install -y  git \
 RUN git clone --recurse-submodules https://github.com/pop-os/cosmic-epoch
 # This is where the magic happens
 RUN cd cosmic-epoch && git submodule update --remote && just sysext && rm -rf cosmic-sysext/usr/lib/extension-release.d
+
+RUN cd ..
+
+RUN dnf update -y
+RUN dnf install -y  git \
+                    just \
+                    rustc \
+                    cargo \
+                    libglvnd-devel \
+                    libxkbcommon-devel
+RUN git clone --recurse-submodules https://github.com/pop-os/launcher
+RUN cd launcher && just build-release
+
+RUN cd ..
+
+RUN dnf update -y
+RUN dnf install -y  git 
+RUN git clone --recurse-submodules https://github.com/pop-os/system76-wallpapers
