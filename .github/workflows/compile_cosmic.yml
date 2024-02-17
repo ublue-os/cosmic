@@ -37,11 +37,11 @@ jobs:
         nasm
     - run: rm -rf /host/usr/local/lib/android # Free space
     - run: git clone --recurse-submodules https://github.com/pop-os/cosmic-epoch
-    # - run: cd cosmic-epoch && git submodule update --remote && just sysext && rm -rf cosmic-sysext/usr/lib/extension-release.d
-    # - run: cd ..
+    - run: cd cosmic-epoch && git submodule update --remote && just sysext && rm -rf cosmic-sysext/usr/lib/extension-release.d
+    - run: cd ..
     - run: git clone --recurse-submodules https://github.com/pop-os/launcher
-    # - run: cd launcher && just build-release
-    # - run: cd ..
+    - run: cd launcher && just build-release
+    - run: cd ..
     - run: mv cosmic-epoch /cosmic-epoch
     - run: mv launcher /launcher
     - uses: actions/upload-artifact@v4
