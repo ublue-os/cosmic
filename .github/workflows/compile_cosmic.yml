@@ -40,8 +40,8 @@ jobs:
     # - run: cd cosmic-epoch && git submodule update --remote && just sysext && rm -rf cosmic-sysext/usr/lib/extension-release.d
     # - run: cd ..
     - run: git clone --recurse-submodules https://github.com/pop-os/launcher
-    - run: cd launcher && just build-release
-    - run: cd ..
+    # - run: cd launcher && just build-release
+    # - run: cd ..
     - uses: actions/upload-artifact@v4
       with:
         # Name of the artifact to upload.
@@ -56,7 +56,16 @@ jobs:
           /cosmic-epoch/cosmic-greeter/cosmic-greeter.toml
           /cosmic-epoch/cosmic-greeter/debian/cosmic-greeter.service
           /launcher/target/release/pop-launcher-bin
-          /launcher/plugins/src/*/plugin.ron
+          /launcher/plugins/src/calc/plugin.ron
+          /launcher/plugins/src/cosmic_toplevel/plugin.ron
+          /launcher/plugins/src/desktop_entries/plugin.ron
+          /launcher/plugins/src/files/plugin.ron
+          /launcher/plugins/src/find/plugin.ron
+          /launcher/plugins/src/pulse/plugin.ron
+          /launcher/plugins/src/recent/plugin.ron
+          /launcher/plugins/src/scripts/plugin.ron
+          /launcher/plugins/src/terminal/plugin.ron
+          /launcher/plugins/src/web/plugin.ron
     
         # The desired behavior if no files are found using the provided path.
         # Available Options:
