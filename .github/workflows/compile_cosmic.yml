@@ -42,8 +42,8 @@ jobs:
     - run: git clone --recurse-submodules https://github.com/pop-os/launcher
     # - run: cd launcher && just build-release
     # - run: cd ..
-    - run: mv cosmic-epoch /host/cosmic-epoch
-    - run: mv launcher /host/launcher
+    - run: mv cosmic-epoch /cosmic-epoch
+    - run: mv launcher /launcher
     - uses: actions/upload-artifact@v4
       with:
         # Name of the artifact to upload.
