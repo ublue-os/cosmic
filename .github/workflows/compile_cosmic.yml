@@ -73,7 +73,7 @@ jobs:
         #   error: Fail the action with an error message
         #   ignore: Do not output any warnings or errors, the action does not fail
         # Optional. Default is 'warn'
-        if-no-files-found:
+        if-no-files-found: warn
     
         # Duration after which artifact will expire in days. 0 means using default retention.
         # Minimum 1 day.
