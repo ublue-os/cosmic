@@ -19,10 +19,6 @@ Silverblue-based w/ COSMIC (default)
 
     sudo rpm-ostree rebase ostree-unverified-registry:ghcr.io/ryanabx/fedora-cosmic-atomic-silverblue:latest-amd64
 
-Silverblue-based w/ COSMIC & NVIDIA Drivers
-
-    sudo rpm-ostree rebase ostree-unverified-registry:ghcr.io/ryanabx/fedora-cosmic-atomic-silverblue-nvidia:latest-amd64
-
 #### Not Recommended (Base Fedora Image, no Silverblue)
 
 Base Fedora Image w/ COSMIC
