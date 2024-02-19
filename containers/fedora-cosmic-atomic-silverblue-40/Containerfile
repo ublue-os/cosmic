@@ -1,5 +1,5 @@
-ARG IMAGE_MAJOR_VERSION=39
-ARG BASE_IMAGE_URL=quay.io/fedora-ostree-desktops/base
+ARG IMAGE_MAJOR_VERSION=40
+ARG BASE_IMAGE_URL=quay.io/fedora/fedora-silverblue
 ARG COMPILED_COSMIC=ghcr.io/ryanabx/cosmic-desktop-compiled
 
 FROM COMPILED_COSMIC as cosmic-compiled
@@ -49,7 +49,7 @@ RUN ln -s /usr/bin/pop-launcher /usr/lib/pop-launcher/plugins/web/web
 
 COPY --from=cosmic-compiled /system76-wallpapers/backgrounds /usr/share/backgrounds/pop
 
-RUN ln -s /usr/lib/systemd/system/cosmic-greeter.service /etc/systemd/system/display-manager.service
+# RUN ln -s /usr/lib/systemd/system/cosmic-greeter.service /etc/systemd/system/display-manager.service
 RUN rm -rf /var/lib/greetd
 
 RUN rpm-ostree cleanup -m && ostree container commit

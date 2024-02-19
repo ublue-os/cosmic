@@ -1,0 +1,5 @@
+title: COSMIC Desktop Compiled
+name: cosmic-desktop-compiled
+description: Do not rebase to this. This is for the CI
+image-registry: ghcr.io
+image-version: 39
