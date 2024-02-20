@@ -24,7 +24,7 @@ RUN dnf install -y  git \
                     rust-rav1e+nasm-rs-devel
 RUN git clone --recurse-submodules https://github.com/pop-os/cosmic-epoch
 # This is where the magic happens
-# RUN cd cosmic-epoch && git submodule update --remote && just sysext && rm -rf cosmic-sysext/usr/lib/extension-release.d && cd ..
+RUN cd cosmic-epoch && git submodule update --remote && just sysext && rm -rf cosmic-sysext/usr/lib/extension-release.d && cd ..
 
 RUN git clone --recurse-submodules https://github.com/pop-os/launcher
-# RUN cd launcher && just build-release && cd ..
+RUN cd launcher && just build-release && cd ..
