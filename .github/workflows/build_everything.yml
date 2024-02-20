@@ -123,15 +123,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y qemu-user-static
-      
-      - name: Download build
-        uses: actions/download-artifact@v4
-        with:
-          # Name of the artifact to download.
-          # If unspecified, all artifacts for the run are downloaded.
-          # Optional.
-          name: cosmic-desktop
-      - run: sudo tar -x -v -p -f cosmic-desktop.tar
 
       # Build image using Buildah action
       - name: Build Image
@@ -287,15 +278,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y qemu-user-static
-      
-      - name: Download build
-        uses: actions/download-artifact@v4
-        with:
-          # Name of the artifact to download.
-          # If unspecified, all artifacts for the run are downloaded.
-          # Optional.
-          name: cosmic-desktop
-      - run: sudo tar -x -v -p -f cosmic-desktop.tar
 
       # Build image using Buildah action
       - name: Build Image
@@ -455,15 +437,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y qemu-user-static
-      
-      - name: Download build
-        uses: actions/download-artifact@v4
-        with:
-          # Name of the artifact to download.
-          # If unspecified, all artifacts for the run are downloaded.
-          # Optional.
-          name: cosmic-desktop
-      - run: sudo tar -x -v -p -f cosmic-desktop.tar
 
       # Build image using Buildah action
       - name: Build Image
