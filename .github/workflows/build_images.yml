@@ -1,8 +1,5 @@
 name: build_images
 on:
-  workflow_run:
-      workflows: ['compile']
-      types: [completed]
   workflow_dispatch:
   
 env:

@@ -1,8 +1,36 @@
 ARG IMAGE_MAJOR_VERSION=39
 ARG BASE_IMAGE_URL=quay.io/fedora/fedora-silverblue
-ARG COMPILED_COSMIC=ghcr.io/ryanabx/cosmic-desktop-compiled
 
-FROM COMPILED_COSMIC as cosmic-compiled
+FROM registry.fedoraproject.org/fedora:39 as cosmic-compiled
+
+RUN dnf update -y
+RUN dnf install -y  git \
+                    make \
+                    which \
+                    just \
+                    rustc \
+                    libglvnd-devel \
+                    libseat-devel \
+                    libxkbcommon-devel \
+                    lld \
+                    libinput-devel \
+                    glib2-devel \
+                    gtk3-devel \
+                    dbus-devel \
+                    wayland-devel \
+                    clang-devel \
+                    cargo \
+                    mesa-libgbm-devel \
+                    pipewire-devel \
+                    pam-devel \
+                    flatpak-devel \
+                    rust-rav1e+nasm-rs-devel
+RUN git clone --recurse-submodules https://github.com/pop-os/cosmic-epoch
+# This is where the magic happens
+RUN cd cosmic-epoch && git submodule update --remote && just sysext && rm -rf cosmic-sysext/usr/lib/extension-release.d && cd ..
+
+RUN git clone --recurse-submodules https://github.com/pop-os/launcher
+RUN cd launcher && just build-release && cd ..
 
 FROM ${BASE_IMAGE_URL}:${IMAGE_MAJOR_VERSION}
 
