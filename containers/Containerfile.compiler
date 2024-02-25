@@ -24,16 +24,9 @@ RUN dnf install -y  git \
                     rust-rav1e+nasm-rs-devel
 RUN mkdir -p /build
 RUN git clone --recurse-submodules https://github.com/pop-os/cosmic-epoch
-RUN cd cosmic-epoch && git submodule update --remote
-RUN just install rootdir=/build prefix=/usr
-RUN just clean
-
-RUN cd ..
+RUN cd cosmic-epoch && git submodule update --remote && just install rootdir=/build prefix=/usr && just clean && cd ..
 
 RUN git clone --recurse-submodules https://github.com/pop-os/launcher
-RUN cd launcher
-RUN just build-release
-RUN just install rootdir=/build
-RUN just clean
+RUN cd launcher && just build-release && just install rootdir=/build && just clean && cd ..
 
 # Artifacts in /build
