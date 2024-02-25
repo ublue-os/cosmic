@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [amd64, arm64] #add ,arm64 to add back arm build
+        arch: [amd64] #add ,arm64 to add back arm build
         version: [39, 40]
         image_name: [fedora-cosmic-atomic, fedora-cosmic-atomic-silverblue]
     steps:

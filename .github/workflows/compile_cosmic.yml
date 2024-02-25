@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [amd64, arm64] #add ,arm64 to add back arm build
+        arch: [amd64] #add ,arm64 to add back arm build
     
     steps:
       - name: Maximize build space
