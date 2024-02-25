@@ -22,6 +22,7 @@ RUN dnf install -y  git \
                     pam-devel \
                     flatpak-devel \
                     rust-rav1e+nasm-rs-devel
+RUN mkdir -p /build
 RUN git clone --recurse-submodules https://github.com/pop-os/cosmic-epoch
 RUN cd cosmic-epoch && git submodule update --remote
 RUN just install rootdir=/build prefix=/usr
