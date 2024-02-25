@@ -19,7 +19,7 @@ jobs:
       matrix:
         arch: [amd64] #add ,arm64 to add back arm build
         version: [39, 40]
-        image_name: [fedora-cosmic-atomic, fedora-cosmic-atomic-silverblue]
+        image_name: [fedora-cosmic-atomic, fedora-cosmic-atomic-silverblue, fedora-cosmic-atomic-nvidia]
     steps:
       - name: Maximize build space
         uses: easimon/maximize-build-space@v10
@@ -43,9 +43,9 @@ jobs:
           images: |
             ${{ matrix.image_name }}
           labels: |
-            org.opencontainers.image.title= ${{ matrix.image_name }}
-            org.opencontainers.image.version= ${{ matrix.version }}
-            org.opencontainers.image.description= ${{ env.description }}
+            org.opencontainers.image.title=${{ matrix.image_name }}
+            org.opencontainers.image.version=${{ matrix.version }}
+            org.opencontainers.image.description=${{ env.description }}
             io.artifacthub.package.readme-url=https://raw.githubusercontent.com/ryanabx/fedora-cosmic-atomic/main/README.md
             io.artifacthub.package.logo-url=https://avatars.githubusercontent.com/u/56272643?s=200&v=4
 
@@ -60,12 +60,12 @@ jobs:
         uses: redhat-actions/buildah-build@v2
         with:
           containerfiles: |
-            ./containers/Containerfile.${{ matrix.image_name }}.${{ matrix.version }}
+            ./containers/Containerfile.${{ matrix.image_name }}
           image: ${{ matrix.image_name }}
-          archs: ${{ env.arch_type }}
+          archs: ${{ matrix.arch }}
           build-args: |
-            IMAGE_MAJOR_VERSION= ${{ matrix.version }}
-            IMAGE_REGISTRY= ${{ env.image_registry }}
+            IMAGE_MAJOR_VERSION=${{ matrix.version }}
+            IMAGE_REGISTRY=${{ env.image_registry }}
           oci: false
 
       - name: 'Login to GitHub Container Registry'

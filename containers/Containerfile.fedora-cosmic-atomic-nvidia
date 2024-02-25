@@ -1,5 +1,5 @@
-ARG IMAGE_MAJOR_VERSION=40
-ARG BASE_IMAGE_URL=quay.io/fedora/fedora-silverblue
+ARG IMAGE_MAJOR_VERSION=39
+ARG BASE_IMAGE_URL=ghcr.io/ublue-os/base-nvidia
 
 FROM ghcr.io/ryanabx/cosmic-artifacts:latest as cosmic-compiled
 
