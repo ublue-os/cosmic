@@ -28,6 +28,6 @@ RUN git clone --recurse-submodules https://github.com/pop-os/launcher
 RUN cd launcher && just build-release && just rootdir=/build install && just clean && cd ..
 
 RUN git clone --recurse-submodules https://github.com/pop-os/cosmic-epoch
-RUN cd cosmic-epoch && git submodule update --remote && just rootdir=/build prefix=/usr install && just clean && cd ..
+RUN cd cosmic-epoch && git submodule update --remote && just install rootdir=/build prefix=/usr && just clean && cd ..
 
 # Artifacts in /build
