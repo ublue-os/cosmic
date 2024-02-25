@@ -16,10 +16,6 @@ inputs:
 
 runs:
   using: "composite"
-  permissions:
-    contents: read
-    packages: write
-    id-token: write
   steps:
         - name: Maximize build space
           uses: easimon/maximize-build-space@v10

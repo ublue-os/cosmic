@@ -2,6 +2,10 @@ name: push_images
 on:
   workflow_dispatch:
 
+env:
+  description: Compiled builds of the COSMIC Desktop Environment
+  image_registry: ghcr.io/ryanabx
+
 jobs:
   build_all_images:
     name: Build 
@@ -16,15 +20,68 @@ jobs:
         arch: [amd64, arm64] #add ,arm64 to add back arm build
         version: [39, 40]
         image_name: [fedora-cosmic-atomic, fedora-cosmic-atomic-silverblue]
-    
     steps:
-      - uses: actions/checkout@v4
-      - name: Build ${{ matrix.image_name }}-${{ matrix.version }}
-        uses: "./.github/templates/build_push_image"
+      - name: Maximize build space
+        uses: easimon/maximize-build-space@v10
         with:
-          image_name: ${{ matrix.image_name }}
-          image_version: ${{ matrix.version }}
-          image_registry: ghcr.io/ryanabx
-          image_description: Compiled builds of the COSMIC Desktop Environment
-          containerfiles: ./containers/Containerfile.${{ matrix.image_name }}.${{ matrix.version }}
-          arch_type: ${{ matrix.arch }}
+          root-reserve-mb: 38000
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+          remove-codeql: 'true'
+          remove-docker-images: 'true'
+
+      # Checkout push-to-registry action GitHub repository
+      - name: Checkout Push to Registry action
+        uses: actions/checkout@v4
+
+      # Build metadata
+      - name: Image Metadata
+        uses: docker/metadata-action@v5
+        id: meta
+        with:
+          images: |
+            ${{ matrix.image_name }}
+          labels: |
+            org.opencontainers.image.title= ${{ matrix.image_name }}
+            org.opencontainers.image.version= ${{ matrix.version }}
+            org.opencontainers.image.description= ${{ env.description }}
+            io.artifacthub.package.readme-url=https://raw.githubusercontent.com/ryanabx/fedora-cosmic-atomic/main/README.md
+            io.artifacthub.package.logo-url=https://avatars.githubusercontent.com/u/56272643?s=200&v=4
+
+      - name: Install qemu dependency
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-user-static
+
+      # Build image using Buildah action
+      - name: Build Image
+        id: build_image
+        uses: redhat-actions/buildah-build@v2
+        with:
+          containerfiles: |
+            ./containers/Containerfile.${{ matrix.image_name }}.${{ matrix.version }}
+          image: ${{ matrix.image_name }}
+          archs: ${{ env.arch_type }}
+          build-args: |
+            IMAGE_MAJOR_VERSION= ${{ matrix.version }}
+            IMAGE_REGISTRY= ${{ env.image_registry }}
+          oci: false
+
+      - name: 'Login to GitHub Container Registry'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+
+      # Push the image to GHCR (Image Registry)
+      - name: Push To GHCR
+        uses: redhat-actions/push-to-registry@v2
+        id: push
+        with:
+          image: ${{ steps.build_image.outputs.image }}
+          tags: ${{ steps.build_image.outputs.tags }}
+          registry: ${{ env.image_registry }}
+          extra-args: |
+            --disable-content-trust
