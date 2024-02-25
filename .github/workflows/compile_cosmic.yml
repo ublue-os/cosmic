@@ -1,0 +1,35 @@
+name: compile_cosmic
+on:
+  workflow_dispatch:
+
+env:
+  IMAGE_REGISTRY: ghcr.io/ryanabx
+  IMAGE_NAME: cosmic-artifacts
+  IMAGE_MAJOR_VERSION: 40
+  IMAGE_DESCRIPTION: Compiled builds of the COSMIC Desktop Environment
+  CONTAINERFILES: ./containers/Containerfile.compiler
+
+jobs:
+  compile:
+    name: Compile COSMIC DE
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [amd64, arm64] #add ,arm64 to add back arm build
+    
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile COSMIC DE
+        uses: "./.github/templates/build_push_image"
+        with:
+          image_name: cosmic-artifacts
+          image_version: 40
+          image_registry: ghcr.io/ryanabx
+          image_description: Compiled builds of the COSMIC Desktop Environment
+          containerfiles: ./containers/Containerfile.compiler
+          arch_type: ${{ matrix.arch }}

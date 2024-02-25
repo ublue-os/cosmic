@@ -1,5 +1,0 @@
-title: Fedora COSMIC Atomic
-name: fedora-cosmic-atomic
-description: Fedora COSMIC Atomic ships the pre-alpha COSMIC desktop environment in an atomic fashion, with all the submodules updated to their master/main branch.
-image-registry: ghcr.io
-image-version: 39

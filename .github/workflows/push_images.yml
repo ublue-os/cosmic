@@ -1,0 +1,30 @@
+name: push_images
+on:
+  workflow_dispatch:
+
+jobs:
+  build_all_images:
+    name: Build 
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [amd64, arm64] #add ,arm64 to add back arm build
+        version: [39, 40]
+        image_name: [fedora-cosmic-atomic, fedora-cosmic-atomic-silverblue]
+    
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build ${{ matrix.image_name }}-${{ matrix.version }}
+        uses: "./.github/templates/build_push_image"
+        with:
+          image_name: ${{ matrix.image_name }}
+          image_version: ${{ matrix.version }}
+          image_registry: ghcr.io/ryanabx
+          image_description: Compiled builds of the COSMIC Desktop Environment
+          containerfiles: ./containers/Containerfile.${{ matrix.image_name }}.${{ matrix.version }}
+          arch_type: ${{ matrix.arch }}

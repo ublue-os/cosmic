@@ -1,0 +1,23 @@
+ARG IMAGE_MAJOR_VERSION=39
+ARG BASE_IMAGE_URL=quay.io/fedora/fedora-silverblue
+
+FROM ghcr.io/ryanabx/cosmic-artifacts:latest as cosmic-compiled
+
+FROM ${BASE_IMAGE_URL}:${IMAGE_MAJOR_VERSION}
+
+# Cosmic dependencies
+RUN rpm-ostree install \
+	libseat \
+	pop-icon-theme \
+	greetd \
+        greetd-selinux \
+	cage \
+        mozilla-fira-mono-fonts \
+        mozilla-fira-sans-fonts
+
+COPY --from=cosmic-compiled /build/* /
+
+# RUN ln -s /usr/lib/systemd/system/cosmic-greeter.service /etc/systemd/system/display-manager.service
+RUN rm -rf /var/lib/greetd
+
+RUN rpm-ostree cleanup -m && ostree container commit
