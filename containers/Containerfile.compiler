@@ -27,7 +27,7 @@ RUN dnf install -y  git \
 RUN mkdir -p /artifacts
 
 RUN git clone --recurse-submodules https://github.com/ryanabx/cosmic-epoch
-RUN cd cosmic-epoch && git checkout origin/patch-1 && git submodule update --remote && just rootdir='/artifacts' prefix='/usr' install && just clean && cd ..
+RUN cd cosmic-epoch && git fetch && git switch patch-1 && git submodule update --remote && just rootdir='/artifacts' prefix='/usr' install && just clean && cd ..
 
 RUN git clone --recurse-submodules https://github.com/pop-os/launcher
 RUN cd launcher && just build-release && just rootdir='/artifacts' install && just clean && cd ..
