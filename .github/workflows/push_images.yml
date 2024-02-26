@@ -35,6 +35,34 @@ jobs:
       - name: Checkout Push to Registry action
         uses: actions/checkout@v4
 
+      - name: Generate tags
+        id: generate-tags
+        shell: bash
+        run: |
+          # Generate a timestamp for creating an image version history
+          TIMESTAMP="$(date +%Y%m%d)"
+          MAJOR_VERSION="$(echo ${{ matrix.version }} | cut -d . -f 1)"
+          COMMIT_TAGS=()
+          BUILD_TAGS=()
+          # Have tags for tracking builds during pull request
+          SHA_SHORT="${GITHUB_SHA::7}"
+
+          # Using clever bash string templating, https://stackoverflow.com/q/40771781
+          # don't make malformed tags if $MAJOR_VERSION is empty (base-image didn't include proper labels) --
+          COMMIT_TAGS+=("${SHA_SHORT}${MAJOR_VERSION:+-$MAJOR_VERSION}-${{ matrix.arch }}")
+          BUILD_TAGS=("${MAJOR_VERSION}-${{ matrix.arch }}" "${MAJOR_VERSION:+$MAJOR_VERSION-}${TIMESTAMP}-${{ matrix.arch }}")
+          # --
+          BUILD_TAGS+=("${TIMESTAMP}-${{ matrix.arch }}")
+          BUILD_TAGS+=("latest-${{ matrix.arch }}")
+
+          
+          alias_tags=("${BUILD_TAGS[@]}")
+          echo "Generated the following build tags: "
+          for TAG in "${BUILD_TAGS[@]}"; do
+              echo "${TAG}"
+          done
+          echo "alias_tags=${alias_tags[*]}" >> $GITHUB_OUTPUT
+
       # Build metadata
       - name: Image Metadata
         uses: docker/metadata-action@v5
@@ -62,6 +90,8 @@ jobs:
           containerfiles: |
             ./containers/Containerfile.${{ matrix.image_name }}
           image: ${{ matrix.image_name }}
+          tags: |
+            ${{ steps.generate-tags.outputs.alias_tags }}
           archs: ${{ matrix.arch }}
           build-args: |
             IMAGE_MAJOR_VERSION=${{ matrix.version }}
