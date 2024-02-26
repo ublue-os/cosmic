@@ -26,10 +26,10 @@ RUN dnf install -y  git \
                     rust-rav1e+nasm-rs-devel
 RUN mkdir -p /artifacts
 
+RUN git clone --recurse-submodules https://github.com/ryanabx/cosmic-epoch
+RUN cd cosmic-epoch && git checkout features/just-install && git submodule update --remote && just rootdir='/artifacts' prefix='/usr' install && just clean && cd ..
+
 RUN git clone --recurse-submodules https://github.com/pop-os/launcher
 RUN cd launcher && just build-release && just rootdir='/artifacts' install && just clean && cd ..
-
-RUN git clone --recurse-submodules https://github.com/pop-os/cosmic-epoch
-RUN cd cosmic-epoch && git submodule update --remote && just '/artifacts' install && just clean && cd ..
 
 # Artifacts in /artifacts
