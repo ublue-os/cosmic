@@ -15,7 +15,7 @@ RUN rpm-ostree install \
         mozilla-fira-mono-fonts \
         mozilla-fira-sans-fonts
 
-COPY --from=cosmic-compiled /build/* /
+COPY --from=cosmic-compiled /artifacts/* /
 
 RUN ln -s /usr/lib/systemd/system/cosmic-greeter.service /etc/systemd/system/display-manager.service
 RUN rm -rf /var/lib/greetd
