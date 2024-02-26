@@ -24,12 +24,12 @@ RUN dnf install -y  git \
                     pam-devel \
                     flatpak-devel \
                     rust-rav1e+nasm-rs-devel
-RUN mkdir -p /build
+RUN mkdir -p /artifacts
 
 RUN git clone --recurse-submodules https://github.com/pop-os/launcher
-RUN cd launcher && just build-release && just rootdir=${DEST_DIR} install && just clean && cd ..
+RUN cd launcher && just build-release && just rootdir='/artifacts' install && just clean && cd ..
 
 RUN git clone --recurse-submodules https://github.com/pop-os/cosmic-epoch
-RUN cd cosmic-epoch && git submodule update --remote && just ${DEST_DIR} ${USR_DIR} install && just clean && cd ..
+RUN cd cosmic-epoch && git submodule update --remote && just '/artifacts' install && just clean && cd ..
 
-# Artifacts in /build
+# Artifacts in /artifacts
