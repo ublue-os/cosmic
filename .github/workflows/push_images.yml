@@ -50,12 +50,15 @@ jobs:
           # Using clever bash string templating, https://stackoverflow.com/q/40771781
           # don't make malformed tags if $MAJOR_VERSION is empty (base-image didn't include proper labels) --
           COMMIT_TAGS+=("${SHA_SHORT}${MAJOR_VERSION:+-$MAJOR_VERSION}")
-          BUILD_TAGS=("${MAJOR_VERSION}" "${MAJOR_VERSION:+$MAJOR_VERSION-}${TIMESTAMP}")
+          BUILD_TAGS=("${MAJOR_VERSION}" "${MAJOR_VERSION}-${{ matrix.arch }}" "${MAJOR_VERSION:+$MAJOR_VERSION-}${TIMESTAMP}" "${MAJOR_VERSION:+$MAJOR_VERSION-}${TIMESTAMP}-${{ matrix.arch }}")
           # --
           BUILD_TAGS+=("${TIMESTAMP}")
           if [ "${MAJOR_VERSION}" == "39" ]; then
             BUILD_TAGS+=("latest")
+            BUILD_TAGS+=("latest-${{ matrix.arch }}")
           fi
+
+
           
           
           
