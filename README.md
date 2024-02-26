@@ -17,13 +17,13 @@ Go ahead and try one of the ostree images I've created here!
 
 Silverblue-based w/ COSMIC (default)
 
-    sudo rpm-ostree rebase ostree-unverified-registry:ghcr.io/ryanabx/fedora-cosmic-atomic-silverblue:latest-amd64
+    sudo rpm-ostree rebase ostree-unverified-registry:ghcr.io/ryanabx/fedora-cosmic-atomic-silverblue:latest
 
 #### Not Recommended (Base Fedora Image, no Silverblue)
 
 Base Fedora Image w/ COSMIC
 
-    sudo rpm-ostree rebase ostree-unverified-registry:ghcr.io/ryanabx/fedora-cosmic-atomic:latest-amd64
+    sudo rpm-ostree rebase ostree-unverified-registry:ghcr.io/ryanabx/fedora-cosmic-atomic:latest
 
 ### Neofetch
 ![Neofetch of COSMIC desktop in Fedora](./screenshot/1.png)
