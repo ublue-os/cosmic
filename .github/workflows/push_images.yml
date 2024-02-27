@@ -18,8 +18,8 @@ jobs:
       fail-fast: false
       matrix:
         arch: [amd64] #add ,arm64 to add back arm build
-        version: [39, 40]
-        image_name: [fedora-cosmic-atomic, fedora-cosmic-atomic-silverblue, fedora-cosmic-atomic-nvidia]
+        version: [40, rawhide]
+        flavor: [base, silverblue, kinoite]
     steps:
       - name: Maximize build space
         uses: easimon/maximize-build-space@v10
@@ -52,7 +52,7 @@ jobs:
           COMMIT_TAGS+=("${SHA_SHORT}${MAJOR_VERSION:+-$MAJOR_VERSION}")
           BUILD_TAGS=("${MAJOR_VERSION}" "${MAJOR_VERSION}-${{ matrix.arch }}" "${MAJOR_VERSION:+$MAJOR_VERSION-}${TIMESTAMP}" "${MAJOR_VERSION:+$MAJOR_VERSION-}${TIMESTAMP}-${{ matrix.arch }}")
           # --
-          if [ "${MAJOR_VERSION}" == "39" ]; then
+          if [ "${MAJOR_VERSION}" == "40" ]; then
             BUILD_TAGS+=("${TIMESTAMP}")
             BUILD_TAGS+=("latest")
             BUILD_TAGS+=("latest-${{ matrix.arch }}")
@@ -71,9 +71,9 @@ jobs:
         id: meta
         with:
           images: |
-            ${{ matrix.image_name }}
+            COSMIC-${{ matrix.flavor }}
           labels: |
-            org.opencontainers.image.title=${{ matrix.image_name }}
+            org.opencontainers.image.title=COSMIC-${{ matrix.flavor }}
             org.opencontainers.image.version=${{ matrix.version }}
             org.opencontainers.image.description=${{ env.description }}
             io.artifacthub.package.readme-url=https://raw.githubusercontent.com/ryanabx/fedora-cosmic-atomic/main/README.md
@@ -90,14 +90,14 @@ jobs:
         uses: redhat-actions/buildah-build@v2
         with:
           containerfiles: |
-            ./containers/Containerfile.${{ matrix.image_name }}
-          image: ${{ matrix.image_name }}
+            Containerfile
+          image: COSMIC-${{ matrix.flavor }}
           tags: |
             ${{ steps.generate-tags.outputs.alias_tags }}
           archs: ${{ matrix.arch }}
           build-args: |
             IMAGE_MAJOR_VERSION=${{ matrix.version }}
-            IMAGE_REGISTRY=${{ env.image_registry }}
+            FLAVOR=${{ matrix.flavor }}
           oci: false
 
       - name: 'Login to GitHub Container Registry'
