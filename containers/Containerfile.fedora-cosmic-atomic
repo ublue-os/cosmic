@@ -18,6 +18,10 @@ RUN rpm-ostree install \
 COPY --from=cosmic-compiled /artifacts/usr /usr
 RUN ls /usr/bin | grep "cosmic"
 
+COPY --from=cosmic-compiled /cosmic-epoch/cosmic-comp/config.ron /usr/etc/cosmic-comp/config.ron
+COPY --from=cosmic-compiled /cosmic-epoch/cosmic-greeter/cosmic-greeter.toml /usr/etc/greetd/cosmic-greeter.toml
+COPY --from=cosmic-compiled /cosmic-epoch/cosmic-greeter/debian/cosmic-greeter.service /usr/lib/systemd/system/cosmic-greeter.service
+
 RUN ln -s /usr/lib/systemd/system/cosmic-greeter.service /etc/systemd/system/display-manager.service
 RUN rm -rf /var/lib/greetd
 
