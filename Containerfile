@@ -13,4 +13,7 @@ RUN rpm-ostree install cosmic-epoch
 # Install extras (currently just a power manager and a libsecret manager)
 RUN rpm-ostree install tuned gnome-keyring
 
+# Set up display manager
+RUN ln -s /usr/lib/systemd/system/cosmic-greeter.service /etc/systemd/system/display-manager.service
+
 RUN rpm-ostree cleanup -m && ostree container commit
