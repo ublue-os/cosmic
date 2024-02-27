@@ -54,7 +54,6 @@ jobs:
           # --
           if [ "${MAJOR_VERSION}" == "40" ]; then
             BUILD_TAGS+=("${TIMESTAMP}")
-            BUILD_TAGS+=("latest")
             BUILD_TAGS+=("latest-${{ matrix.arch }}")
           fi
           
