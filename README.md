@@ -5,25 +5,41 @@ Like Fedora? Want to try the latest from the work in progress Cosmic Desktop Env
 
 Go ahead and try one of the ostree images I've created here!
 
-### Installation
+### Quick Installation
 
-1. Install an rpm-ostree based desktop, like [Fedora Silverblue](https://fedoraproject.org/atomic-desktops/silverblue/) (aka atomic desktops)
-2. Disable SELinux (edit `/etc/selinux/config`) (note: not recommended for production, but necessary for these images)
-3. Install one of the images listed below!
+Install an rpm-ostree based desktop, like [Fedora Silverblue](https://fedoraproject.org/atomic-desktops/silverblue/) (aka atomic desktops)
 
-### Images
+Disable SELinux (edit `/etc/selinux/config`, set from `enforcing` to `permissive`) (note: not recommended for production, but necessary for these images)
 
-#### Recommended Images (Silverblue Based)
+Run this command:
 
-Silverblue-based w/ COSMIC (default)
+    sudo rpm-ostree rebase ostree-unverified-registry:ghcr.io/ryanabx/cosmic-base:40-amd64
 
-    sudo rpm-ostree rebase ostree-unverified-registry:ghcr.io/ryanabx/fedora-cosmic-atomic-silverblue:latest
+Or this command if you're running an arm device:
 
-#### Not Recommended (Base Fedora Image, no Silverblue)
+    sudo rpm-ostree rebase ostree-unverified-registry:ghcr.io/ryanabx/cosmic-base:40-arm64
 
-Base Fedora Image w/ COSMIC
+Reboot
 
-    sudo rpm-ostree rebase ostree-unverified-registry:ghcr.io/ryanabx/fedora-cosmic-atomic:latest
+    systemctl reboot
+
+### Enabling the display manager
+
+Log in with your username and password, then run:
+
+    sudo systemctl enable cosmic-greeter.service
+
+> Currently, you must manually enable cosmic-greeter in order to have it start by default, see: https://src.fedoraproject.org/rpms/fedora-release/pull-request/317
+
+### Alternative images
+
+    /ryanabx/cosmic-base:rawhide-amd64 # Rawhide
+    /ryanabx/cosmic-base:rawhide-arm64
+    # Cosmic with silverblue
+    /ryanabx/cosmic-silverblue:40-amd64 # 40
+    /ryanabx/cosmic-silverblue:40-arm64
+    /ryanabx/cosmic-silverblue:rawhide-amd64 # Rawhide
+    /ryanabx/cosmic-silverblue:rawhide-arm64
 
 ### Neofetch
 ![Neofetch of COSMIC desktop in Fedora](./screenshot/1.png)
