@@ -17,9 +17,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [amd64] #add ,arm64 to add back arm build
+        arch: [amd64, arm64] #add ,arm64 to add back arm build
         version: [40, rawhide]
-        flavor: [base, silverblue, kinoite]
+        flavor: [base, silverblue]
     steps:
       - name: Maximize build space
         uses: easimon/maximize-build-space@v10
