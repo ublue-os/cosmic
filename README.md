@@ -1,5 +1,5 @@
 # Fedora Cosmic Atomic
-### Fedora Silverblue-based Atomic Desktop with the Pre-Alpha Cosmic Desktop Environment Included!
+### Fedora Atomic Desktop with the Pre-Alpha Cosmic Desktop Environment included!
 
 > NOTE: These images are not associated with System76! If you have issues, please understand they might be COSMIC related, OR they might be related to this image.
 
@@ -7,23 +7,23 @@ Like Fedora? Want to try the latest from the work in progress Cosmic Desktop Env
 
 Go ahead and try one of the ostree images I've created here!
 
+> NOTE: The COSMIC Desktop Environment is still PRE ALPHA. Do not daily drive this image on your main workstation unless you know what you're doing.
+
 ### Quick Installation
 
 Install an rpm-ostree based desktop, like [Fedora Silverblue](https://fedoraproject.org/atomic-desktops/silverblue/) (aka atomic desktops)
 
-Disable SELinux (edit `/etc/selinux/config`, set from `enforcing` to `permissive`) (note: not recommended for production, but necessary for these images)
+Disable SELinux (`sudo setenforce 0`, verify with `getenforce`) (note: not recommended for production, but necessary for now)
 
 Run this command:
 
-    sudo rpm-ostree rebase ostree-unverified-registry:ghcr.io/ryanabx/cosmic-silverblue:40-amd64
+    rpm-ostree rebase ostree-unverified-registry:ghcr.io/ryanabx/cosmic-silverblue:40-amd64
 
 Or this command if you're running an arm device:
 
-    sudo rpm-ostree rebase ostree-unverified-registry:ghcr.io/ryanabx/cosmic-silverblue:40-arm64
+    rpm-ostree rebase ostree-unverified-registry:ghcr.io/ryanabx/cosmic-silverblue:40-arm64
 
-Reboot
-
-    systemctl reboot
+Reboot with `reboot`.
 
 ### Enabling the display manager
 
@@ -49,5 +49,3 @@ Log in with your username and password, then run:
 ### Issues
 
 For issues with the containers, feel free to submit an issue on this repo. For COSMIC related issues, please see https://github.com/pop-os/cosmic-epoch
-
-> Note: The COSMIC Desktop Environment is still PRE ALPHA. Do not daily drive this image on your main workstation unless you know what you're doing.
