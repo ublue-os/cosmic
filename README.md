@@ -15,11 +15,11 @@ Disable SELinux (edit `/etc/selinux/config`, set from `enforcing` to `permissive
 
 Run this command:
 
-    sudo rpm-ostree rebase ostree-unverified-registry:ghcr.io/ryanabx/cosmic-silverblue:40-amd64
+    sudo rpm-ostree rebase ostree-unverified-registry:ghcr.io/ublue-os/cosmic-silverblue:40-amd64
 
 Or this command if you're running an arm device:
 
-    sudo rpm-ostree rebase ostree-unverified-registry:ghcr.io/ryanabx/cosmic-silverblue:40-arm64
+    sudo rpm-ostree rebase ostree-unverified-registry:ghcr.io/ublue-os/cosmic-silverblue:40-arm64
 
 Reboot
 
@@ -44,7 +44,7 @@ Log in with your username and password, then run:
     /ryanabx/cosmic-base:rawhide-arm64
 
 ### Neofetch
-![Neofetch of COSMIC desktop in Fedora](./screenshot/1.png)
+![Neofetch of COSMIC desktop in Fedora](./screenshot/cosmic-neofetch.png)
 
 ### Issues
 
