@@ -15,11 +15,11 @@ Disable SELinux (edit `/etc/selinux/config`, set from `enforcing` to `permissive
 
 Run this command:
 
-    sudo rpm-ostree rebase ostree-unverified-registry:ghcr.io/ryanabx/cosmic-silverblue:40-amd64
+    sudo rpm-ostree rebase ostree-image-signed:docker://:ghcr.io/ublue-os/cosmic-base:40-amd64
 
 Or this command if you're running an arm device:
 
-    sudo rpm-ostree rebase ostree-unverified-registry:ghcr.io/ryanabx/cosmic-silverblue:40-arm64
+    sudo rpm-ostree rebase ostree-image-signed:docker://:ghcr.io/ublue-os/cosmic-base:40-arm64
 
 Reboot
 
@@ -30,18 +30,6 @@ Reboot
 Log in with your username and password, then run:
 
     sudo systemctl enable cosmic-greeter.service
-
-> Currently, you must manually enable cosmic-greeter in order to have it start by default, see: https://src.fedoraproject.org/rpms/fedora-release/pull-request/317
-
-### Alternative images
-
-    /ryanabx/cosmic-silverblue:rawhide-amd64 # Rawhide
-    /ryanabx/cosmic-silverblue:rawhide-arm64
-    # Cosmic only (no silverblue)
-    /ryanabx/cosmic-base:40-amd64 # 40
-    /ryanabx/cosmic-base:40-arm64
-    /ryanabx/cosmic-base:rawhide-amd64 # Rawhide
-    /ryanabx/cosmic-base:rawhide-arm64
 
 ### Neofetch
 ![Neofetch of COSMIC desktop in Fedora](./screenshot/1.png)
