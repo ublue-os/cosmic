@@ -105,6 +105,6 @@ jobs:
         with:
           image: ${{ steps.build_image.outputs.image }}
           tags: ${{ steps.build_image.outputs.tags }}
-          registry: ${{ env.image_registry }}
+          registry: ${{ env.IMAGE_REGISTRY }}
           extra-args: |
             --disable-content-trust
