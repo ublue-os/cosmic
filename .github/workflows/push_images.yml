@@ -1,10 +1,12 @@
-name: push_images
+name: build-ublue
 on:
+  pull_request:
+  merge_group:
+  schedule:
+    - cron: '0 15 * * *'  # 3pm UTC everyday (timed against official fedora container pushes)
   workflow_dispatch:
-
 env:
-  description: Compiled builds of the COSMIC Desktop Environment
-  image_registry: ghcr.io/ryanabx
+  IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
 
 jobs:
   build_all_images:
@@ -25,53 +27,130 @@ jobs:
       - name: Checkout Push to Registry action
         uses: actions/checkout@v4
 
+      - name: Matrix Variables
+        shell: bash
+        run: |
+          if [[ "${{ matrix.major_version }}" -ge "40" ]] && \
+            grep "${{ matrix.image_name }}" <<< "silverblue, kinoite, sericea"; then
+              echo "SOURCE_ORG=fedora" >> $GITHUB_ENV
+              echo "SOURCE_IMAGE=fedora-${{ matrix.image_name }}" >> $GITHUB_ENV
+          else
+              if [[ "${{ matrix.image_name }}" == "lxqt" || "${{ matrix.image_name }}" == "mate" ]]; then
+                  echo "SOURCE_IMAGE=base" >> $GITHUB_ENV
+              else
+                  echo "SOURCE_IMAGE=${{ matrix.image_name }}" >> $GITHUB_ENV
+              fi
+              echo "SOURCE_ORG=fedora-ostree-desktops" >> $GITHUB_ENV
+          fi
+
+          # THE FOLLOWING IS MESSY BUT TEMPORARY UNTIL F38 IS GONE
+          # see: https://github.com/ublue-os/main/issues/369
+          # Fedora 39+ images do not include custom kmods (legacy)
+          if [[ "${{ matrix.major_version}}" -ge "39" && "${{ matrix.build_target }}" == "nokmods" ]]; then
+              export IMAGE_FLAVOR=main
+          elif [[ "${{ matrix.major_version}}" -lt "39" && "${{ matrix.build_target }}" == "nokmods" ]]; then
+              export IMAGE_FLAVOR=nokmods
+          elif [[ "${{ matrix.major_version}}" -lt "39" && "${{ matrix.build_target }}" == "kmods" ]]; then
+              export IMAGE_FLAVOR=main
+          else
+              echo "ERROR: invalid workflow request - ${{ matrix.major_version }} - ${{ matrix.build_target }}"
+              exit 1
+          fi
+          echo "IMAGE_NAME=${{ matrix.image_name }}-${IMAGE_FLAVOR}" >> $GITHUB_ENV
+
       - name: Generate tags
         id: generate-tags
         shell: bash
         run: |
           # Generate a timestamp for creating an image version history
           TIMESTAMP="$(date +%Y%m%d)"
-          MAJOR_VERSION="$(echo ${{ matrix.version }} | cut -d . -f 1)"
+          VARIANT="${{ matrix.major_version }}"
+
           COMMIT_TAGS=()
           BUILD_TAGS=()
+
           # Have tags for tracking builds during pull request
           SHA_SHORT="${GITHUB_SHA::7}"
+          COMMIT_TAGS+=("pr-${{ github.event.number }}-${VARIANT}")
+          COMMIT_TAGS+=("${SHA_SHORT}-${VARIANT}")
 
-          # Using clever bash string templating, https://stackoverflow.com/q/40771781
-          # don't make malformed tags if $MAJOR_VERSION is empty (base-image didn't include proper labels) --
-          COMMIT_TAGS+=("${SHA_SHORT}${MAJOR_VERSION:+-$MAJOR_VERSION}")
-          BUILD_TAGS=("${MAJOR_VERSION}" "${MAJOR_VERSION}-${{ matrix.arch }}" "${MAJOR_VERSION:+$MAJOR_VERSION-}${TIMESTAMP}" "${MAJOR_VERSION:+$MAJOR_VERSION-}${TIMESTAMP}-${{ matrix.arch }}")
-          # --
-          if [ "${MAJOR_VERSION}" == "40" ]; then
-            BUILD_TAGS+=("${TIMESTAMP}")
-            BUILD_TAGS+=("latest-${{ matrix.arch }}")
+          if [[ "${{ matrix.is_latest_version }}" == "true" ]] && \
+             [[ "${{ matrix.is_stable_version }}" == "true" ]]; then
+              COMMIT_TAGS+=("pr-${{ github.event.number }}")
+              COMMIT_TAGS+=("${SHA_SHORT}")
           fi
-          
-          alias_tags=("${BUILD_TAGS[@]}")
+
+          BUILD_TAGS=("${VARIANT}")
+
+          # Append matching timestamp tags to keep a version history
+          for TAG in "${BUILD_TAGS[@]}"; do
+              BUILD_TAGS+=("${TAG}-${TIMESTAMP}")
+          done
+
+          if [[ "${{ matrix.is_latest_version }}" == "true" ]] && \
+             [[ "${{ matrix.is_stable_version }}" == "true" ]]; then
+              BUILD_TAGS+=("${TIMESTAMP}")
+              BUILD_TAGS+=("latest")
+          elif [[ "${{ matrix.is_gts_version }}" == "true" ]]; then
+              BUILD_TAGS+=("gts-${TIMESTAMP}")
+              BUILD_TAGS+=("gts")
+          fi
+
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+              echo "Generated the following commit tags: "
+              for TAG in "${COMMIT_TAGS[@]}"; do
+                  echo "${TAG}"
+              done
+              alias_tags=("${COMMIT_TAGS[@]}")
+          else
+              alias_tags=("${BUILD_TAGS[@]}")
+          fi
+
           echo "Generated the following build tags: "
           for TAG in "${BUILD_TAGS[@]}"; do
               echo "${TAG}"
           done
+
           echo "alias_tags=${alias_tags[*]}" >> $GITHUB_OUTPUT
 
-      # Build metadata
+      - name: Get current version
+        id: labels
+        uses: Wandalen/wretry.action@v1.4.4
+        with:
+          attempt_limit: 3
+          attempt_delay: 15000
+          command: |
+            set -eo pipefail
+            ver=$(skopeo inspect docker://quay.io/${{ env.SOURCE_ORG }}/${{ env.SOURCE_IMAGE }}:${{ matrix.major_version }} | jq -r '.Labels["org.opencontainers.image.version"]')
+            if [ -z "$ver" ] || [ "null" = "$ver" ]; then
+              echo "inspected image version must not be empty or null"
+              exit 1
+            fi
+            echo "SOURCE_IMAGE_VERSION=$ver" >> $GITHUB_ENV
+
+      # Generate image metadata
       - name: Image Metadata
         uses: docker/metadata-action@v5
         id: meta
         with:
           images: |
-            COSMIC-${{ matrix.flavor }}
+            ${{ env.IMAGE_NAME }}
           labels: |
-            org.opencontainers.image.title=COSMIC-${{ matrix.flavor }}
-            org.opencontainers.image.version=${{ matrix.version }}
-            org.opencontainers.image.description=${{ env.description }}
-            io.artifacthub.package.readme-url=https://raw.githubusercontent.com/ryanabx/fedora-cosmic-atomic/main/README.md
-            io.artifacthub.package.logo-url=https://avatars.githubusercontent.com/u/56272643?s=200&v=4
+            org.opencontainers.image.title=${{ env.IMAGE_NAME }}
+            org.opencontainers.image.version=${{ env.SOURCE_IMAGE_VERSION }}
+            org.opencontainers.image.description=A base Universal Blue ${{ matrix.image_name }} image with batteries included
+            io.artifacthub.package.readme-url=https://raw.githubusercontent.com/${{ github.repository }}/main/README.md
+            io.artifacthub.package.logo-url=https://avatars.githubusercontent.com/u/120078124?s=200&v=4
 
-      - name: Install qemu dependency
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y qemu-user-static
+      - name: Pull base image
+        uses: Wandalen/wretry.action@v1.4.4
+        with:
+          attempt_limit: 3
+          attempt_delay: 15000
+          command: |
+            # pull the base image used for FROM in containerfile so
+            # we can retry on that unfortunately common failure case
+            podman pull quay.io/${{ env.SOURCE_ORG }}/${{ env.SOURCE_IMAGE }}:${{ matrix.major_version }}
 
       # Build image using Buildah action
       - name: Build Image
@@ -79,30 +158,85 @@ jobs:
         uses: redhat-actions/buildah-build@v2
         with:
           containerfiles: |
-            Containerfile
-          image: COSMIC-${{ matrix.flavor }}
+            ./Containerfile
+          image: ${{ env.IMAGE_NAME }}
           tags: |
             ${{ steps.generate-tags.outputs.alias_tags }}
-          archs: ${{ matrix.arch }}
           build-args: |
-            IMAGE_MAJOR_VERSION=${{ matrix.version }}
-            FLAVOR=${{ matrix.flavor }}
+            IMAGE_NAME=${{ matrix.image_name }}
+            SOURCE_ORG=${{ env.SOURCE_ORG }}
+            SOURCE_IMAGE=${{ env.SOURCE_IMAGE }}
+            FEDORA_MAJOR_VERSION=${{ matrix.major_version }}
+            RPMFUSION_MIRROR=${{ vars.RPMFUSION_MIRROR }}
+          labels: ${{ steps.meta.outputs.labels }}
           oci: false
+          extra-args: |
+            --target=${{ matrix.build_target }}
 
-      - name: 'Login to GitHub Container Registry'
+      # Workaround bug where capital letters in your GitHub username make it impossible to push to GHCR.
+      # https://github.com/macbre/push-to-ghcr/issues/12
+      - name: Lowercase Registry
+        id: registry_case
+        uses: ASzc/change-string-case-action@v6
+        with:
+          string: ${{ env.IMAGE_REGISTRY }}
+
+      - name: Push To GHCR
+        uses: Wandalen/wretry.action@v1.4.4
+        id: push
+        if: github.event_name != 'pull_request'
+        env:
+          REGISTRY_USER: ${{ github.actor }}
+          REGISTRY_PASSWORD: ${{ github.token }}
+        with:
+          action: redhat-actions/push-to-registry@v2
+          attempt_limit: 3
+          attempt_delay: 15000
+          with: |
+            image: ${{ steps.build_image.outputs.image }}
+            tags: ${{ steps.build_image.outputs.tags }}
+            registry: ${{ steps.registry_case.outputs.lowercase }}
+            username: ${{ env.REGISTRY_USER }}
+            password: ${{ env.REGISTRY_PASSWORD }}
+            extra-args: |
+              --disable-content-trust
+
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
+        if: github.event_name != 'pull_request'
         with:
           registry: ghcr.io
-          username: ${{github.actor}}
-          password: ${{secrets.GITHUB_TOKEN}}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Push the image to GHCR (Image Registry)
-      - name: Push To GHCR
-        uses: redhat-actions/push-to-registry@v2
-        id: push
-        with:
-          image: ${{ steps.build_image.outputs.image }}
-          tags: ${{ steps.build_image.outputs.tags }}
-          registry: ${{ env.image_registry }}
-          extra-args: |
-            --disable-content-trust
+      # Sign container
+      - uses: sigstore/cosign-installer@v3.4.0
+        if: github.event_name != 'pull_request'
+
+      - name: Sign container image
+        if: github.event_name != 'pull_request'
+        run: |
+          cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ steps.registry_case.outputs.lowercase }}/${{ steps.build_image.outputs.image }}@${TAGS}
+        env:
+          TAGS: ${{ steps.push.outputs.outputs && fromJSON(steps.push.outputs.outputs).digest }}
+          COSIGN_EXPERIMENTAL: false
+          COSIGN_PRIVATE_KEY: ${{ secrets.SIGNING_SECRET }}
+
+      - name: Echo outputs
+        if: github.event_name != 'pull_request'
+        run: |
+          echo "${{ toJSON(steps.push.outputs) }}"
+
+  check:
+    name: Check all builds successful
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    needs: [push-ghcr]
+    steps:
+      - name: Exit on failure
+        if: ${{ needs.push-ghcr.result == 'failure' }}
+        shell: bash
+        run: exit 1
+      - name: Exit
+        shell: bash
+        run: exit 0
