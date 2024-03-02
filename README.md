@@ -11,7 +11,10 @@ Go ahead and try one of the ostree images I've created here!
 
 Install an rpm-ostree based desktop, like [Fedora Silverblue](https://fedoraproject.org/atomic-desktops/silverblue/) (aka atomic desktops)
 
-Disable SELinux (edit `/etc/selinux/config`, set from `enforcing` to `permissive`) (note: not recommended for production, but necessary for these images)
+#### Warning
+This image requires disabling SELinux. This is NOT recommended for production and is a temporary situation until this work is finished in upstream Fedora. 
+
+Edit `/etc/selinux/config`, set from `enforcing` to `permissive`
 
 Run this command:
 
