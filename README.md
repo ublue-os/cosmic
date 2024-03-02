@@ -19,13 +19,13 @@ Edit `/etc/selinux/config`, set from `enforcing` to `permissive`
 Run this command:
 
 ```
-$ sudo rpm-ostree rebase ostree-image-signed:docker://:ghcr.io/ublue-os/cosmic-base:40-amd64
+$ sudo rpm-ostree rebase ostree-image-signed:docker://ghcr.io/ublue-os/cosmic-base:40-amd64
 ```
 
 Or this command if you're running an arm device:
 
 ```
-$ sudo rpm-ostree rebase ostree-image-signed:docker://:ghcr.io/ublue-os/cosmic-base:40-arm64
+$ sudo rpm-ostree rebase ostree-image-signed:docker://ghcr.io/ublue-os/cosmic-base:40-arm64
 ```
 
 Reboot

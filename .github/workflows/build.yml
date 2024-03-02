@@ -93,6 +93,14 @@ jobs:
             SOURCE_IMAGE=${{ matrix.flavor }}
           oci: false
 
+      # Workaround bug where capital letters in your GitHub username make it impossible to push to GHCR.
+      # https://github.com/macbre/push-to-ghcr/issues/12
+      - name: Lowercase Registry
+        id: registry_case
+        uses: ASzc/change-string-case-action@v6
+        with:
+          string: ${{ env.IMAGE_REGISTRY }}
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         if: github.event_name != 'pull_request'
@@ -107,7 +115,7 @@ jobs:
         if: github.event_name != 'pull_request'
         id: push
         with:
-          registry: ${{ env.IMAGE_REGISTRY }}
+          registry: ${{ steps.registry_case.outputs.lowercase }}
           image: ${{ steps.build_image.outputs.image }}
           tags: ${{ steps.build_image.outputs.tags }}
 
@@ -123,3 +131,17 @@ jobs:
           TAGS: ${{ steps.push.outputs.outputs && fromJSON(steps.push.outputs.outputs).digest }}
           COSIGN_EXPERIMENTAL: false
           COSIGN_PRIVATE_KEY: ${{ secrets.SIGNING_SECRET }}
+
+  check:
+    name: Check all builds successful
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Exit on failure
+        if: ${{ needs.build.result == 'failure' }}
+        shell: bash
+        run: exit 1
+      - name: Exit
+        shell: bash
+        run: exit 0
