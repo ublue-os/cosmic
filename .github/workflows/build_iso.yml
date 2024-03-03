@@ -9,6 +9,7 @@ on:
 
 env:
   IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
+  INSTALLER_VERSION: 40
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
@@ -31,11 +32,6 @@ jobs:
       matrix:
         image_name: [cosmic-silverblue, cosmic-base]
         image_tag: [40-amd64, rawhide-amd64]
-        include:
-          - image_tag: 40-amd64
-            major_version: 40
-          - image_tag: rawhide-amd64
-            major_version: rawhide
             
     steps:
       - name: Build ISOs
@@ -46,7 +42,7 @@ jobs:
           IMAGE_NAME: ${{ matrix.image_name }}
           IMAGE_REPO: ghcr.io/ublue-os
           VARIANT: 'Silverblue'
-          VERSION: ${{ matrix.major_version }}
+          VERSION: ${{ env.INSTALLER_VERSION }}
           IMAGE_TAG: ${{ matrix.image_tag }}
           SECURE_BOOT_KEY_URL: 'https://github.com/ublue-os/akmods/raw/main/certs/public_key.der'
           ENROLLMENT_PASSWORD: 'ublue-os'
