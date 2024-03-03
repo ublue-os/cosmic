@@ -23,7 +23,7 @@ jobs:
       packages: write
       id-token: write
     container:
-      image: fedora:${{ env.INSTALLER_VERSION }}
+      image: fedora:latest
       options: "--privileged"
       volumes:
         - "/:/host"
