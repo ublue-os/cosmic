@@ -41,7 +41,7 @@ jobs:
           ARCH: ${{ contains(matrix.image_tag, 'amd64') && 'x86_64' || 'arm64' }}
           IMAGE_NAME: ${{ matrix.image_name }}
           IMAGE_REPO: ghcr.io/ublue-os
-          VARIANT: 'Silverblue'
+          VARIANT: 'Kinoite'
           VERSION: ${{ env.INSTALLER_VERSION }}
           IMAGE_TAG: ${{ matrix.image_tag }}
           SECURE_BOOT_KEY_URL: 'https://github.com/ublue-os/akmods/raw/main/certs/public_key.der'
