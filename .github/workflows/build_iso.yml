@@ -35,7 +35,7 @@ jobs:
           - image_tag: 40-amd64
             major_version: 40
           - image_tag: rawhide-amd64
-            major_version: 41 # We use F41 for rawhide
+            major_version: rawhide
             
     steps:
       - name: Build ISOs
