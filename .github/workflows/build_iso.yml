@@ -23,7 +23,7 @@ jobs:
       packages: write
       id-token: write
     container:
-      image: fedora:latest
+      image: fedora:40
       options: "--privileged"
       volumes:
         - "/:/host"
