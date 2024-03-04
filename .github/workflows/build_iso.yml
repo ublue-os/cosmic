@@ -41,7 +41,7 @@ jobs:
           ARCH: ${{ contains(matrix.image_tag, 'amd64') && 'x86_64' || 'arm64' }}
           IMAGE_NAME: ${{ matrix.image_name }}
           IMAGE_REPO: ghcr.io/ublue-os
-          # Cannot use Silverblue variant since we need the user creation options in anaconda
+          # We cannot use Silverblue variant since we need the user creation options in anaconda
           VARIANT: 'Kinoite'
           VERSION: ${{ env.INSTALLER_VERSION }}
           IMAGE_TAG: ${{ matrix.image_tag }}
@@ -51,7 +51,7 @@ jobs:
       - name: Upload ISOs and Checksum to Job Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.image_name }}-${{ matrix.image_tag }}-${{ matrix.major_version}}
+          name: ${{ matrix.image_name }}-${{ matrix.image_tag }}
           path: ${{ steps.build.outputs.output-directory }}
           if-no-files-found: error
           retention-days: 0
