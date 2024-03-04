@@ -9,7 +9,7 @@ on:
 
 env:
   IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
-  INSTALLER_VERSION: 39
+  INSTALLER_VERSION: 40
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
@@ -41,6 +41,7 @@ jobs:
           ARCH: ${{ contains(matrix.image_tag, 'amd64') && 'x86_64' || 'arm64' }}
           IMAGE_NAME: ${{ matrix.image_name }}
           IMAGE_REPO: ghcr.io/ublue-os
+          # Cannot use Silverblue variant since we need the user creation options in anaconda
           VARIANT: 'Kinoite'
           VERSION: ${{ env.INSTALLER_VERSION }}
           IMAGE_TAG: ${{ matrix.image_tag }}
