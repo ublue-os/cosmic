@@ -16,6 +16,8 @@ This image requires disabling SELinux. This is NOT recommended for production an
 
 Edit `/etc/selinux/config`, set from `enforcing` to `permissive`
 
+> Note: Rebase to an unsigned image before rebasing to the cosmic images below! To rebase onto an unsigned image, change the `ostree-image-signed` to `ostree-unverified-registry`.
+
 Run this command:
 
 ```
