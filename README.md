@@ -16,7 +16,13 @@ This image requires disabling SELinux. This is NOT recommended for production an
 
 Edit `/etc/selinux/config`, set from `enforcing` to `permissive`
 
-Run this command:
+> Note: Rebase to an unsigned image before rebasing to the signed cosmic images below!
+
+```
+$ sudo rpm-ostree rebase ostree-unverified-registry:ghcr.io/ublue-os/cosmic-base:40-amd64
+```
+
+Run this command to rebase onto the signed image:
 
 ```
 $ sudo rpm-ostree rebase ostree-image-signed:docker://ghcr.io/ublue-os/cosmic-base:40-amd64
