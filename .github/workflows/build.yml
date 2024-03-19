@@ -22,7 +22,7 @@ jobs:
       fail-fast: false
       matrix:
         arch: [amd64, arm64]
-        version: [40, rawhide]
+        version: [39, 40, rawhide]
         flavor: [base, silverblue]
     steps:
       # Checkout push-to-registry action GitHub repository
