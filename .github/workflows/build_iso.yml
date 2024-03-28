@@ -35,24 +35,27 @@ jobs:
             
     steps:
       - name: Build ISOs
-        uses: ublue-os/isogenerator@1.0.9
+        uses: jasonn3/build-container-installer@v1.1.1
         id: build
         with:
-          ARCH: ${{ contains(matrix.image_tag, 'amd64') && 'x86_64' || 'arm64' }}
-          IMAGE_NAME: ${{ matrix.image_name }}
-          IMAGE_REPO: ghcr.io/ublue-os
+          arch: ${{ contains(matrix.image_tag, 'amd64') && 'x86_64' || 'arm64' }}
+          image_name: ${{ matrix.image_name }}
+          image_repo: ghcr.io/ublue-os
           # We cannot use Silverblue variant since we need the user creation options in anaconda
-          VARIANT: 'Kinoite'
-          VERSION: ${{ env.INSTALLER_VERSION }}
-          IMAGE_TAG: ${{ matrix.image_tag }}
-          SECURE_BOOT_KEY_URL: 'https://github.com/ublue-os/akmods/raw/main/certs/public_key.der'
-          ENROLLMENT_PASSWORD: 'ublue-os'
+          variant: 'Kinoite'
+          version: ${{ env.INSTALLER_VERSION }}
+          image_tag: ${{ matrix.image_tag }}
+          secure_boot_key_url: 'https://github.com/ublue-os/akmods/raw/main/certs/public_key.der'
+          enrollment_password: 'ublue-os'
+          iso_name: ${{ matrix.image_name }}-${{ steps.generate-tag.outputs.tag }}
 
       - name: Upload ISOs and Checksum to Job Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.image_name }}-${{ matrix.image_tag }}
-          path: ${{ steps.build.outputs.output-directory }}
+          path: |
+            ${{ steps.build.outputs.iso_path }}
+            ${{ steps.build.outputs.iso_path }}-CHECKSUM
           if-no-files-found: error
           retention-days: 0
           compression-level: 0
