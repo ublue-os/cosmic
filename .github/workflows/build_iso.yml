@@ -22,11 +22,6 @@ jobs:
       contents: read
       packages: write
       id-token: write
-    container:
-      image: fedora:40
-      options: "--privileged"
-      volumes:
-        - "/:/host"
     strategy:
       fail-fast: false
       matrix:
