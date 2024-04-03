@@ -18,26 +18,33 @@ This image requires disabling SELinux. **This is NOT recommended for production*
 
     sudo setenforce 0 && getenforce
 
-> Note: Rebase to the signed image, the unsigned image is only needed during the transition
+You can view the selinux config in `/etc/selinux/config`
+
+#### Variants
+- `cosmic-base`: Just the COSMIC Desktop
+- `cosmic-silverblue`: Recommended, Fedora Silverblue with COSMIC Desktop added
+- `cosmic-kinoite`: Fedora Kinoite with COSMIC Desktop addded
+
+> NOTE: Rebase to the signed image, the unsigned image is only needed during the transition
 
 Rebase to the temporary unsigned image
 
-    rpm-ostree rebase --reboot ostree-unverified-registry:ghcr.io/ublue-os/cosmic-base:40-amd64
+    rpm-ostree rebase --reboot ostree-unverified-registry:ghcr.io/ublue-os/VARIANT:40-amd64
 
 Rebase to the signed image
 
-    rpm-ostree rebase --reboot ostree-image-signed:docker://ghcr.io/ublue-os/cosmic-base:40-amd64
+    rpm-ostree rebase --reboot ostree-image-signed:docker://ghcr.io/ublue-os/VARIANT:40-amd64
 
 #### If you are on an ARM device
-> Note: Apple M-series Laptops are not supported by default Fedora ARM
+> NOTE: Apple M-series Laptops are not supported by default Fedora ARM, use [Fedora Asahi Remix](https://asahilinux.org/fedora/)
 
 Rebase to the temporary unsigned image
 
-    rpm-ostree rebase --reboot ostree-unverified-registry:ghcr.io/ublue-os/cosmic-base:40-arm64
+    rpm-ostree rebase --reboot ostree-unverified-registry:ghcr.io/ublue-os/VARIANT:40-arm64
 
 Rebase to the signed image
 
-    rpm-ostree rebase --reboot ostree-image-signed:docker://ghcr.io/ublue-os/cosmic-base:40-arm64
+    rpm-ostree rebase --reboot ostree-image-signed:docker://ghcr.io/ublue-os/VARIANT:40-arm64
 
 ### Enabling the display manager
 
