@@ -22,8 +22,8 @@ jobs:
       fail-fast: false
       matrix:
         arch: [amd64, arm64]
-        version: [40, rawhide]
-        flavor: [base, silverblue]
+        version: [39, 40, rawhide]
+        flavor: [base, silverblue, kinoite]
     steps:
       # Checkout push-to-registry action GitHub repository
       - name: Checkout Push to Registry action
