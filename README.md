@@ -35,17 +35,6 @@ Rebase to the signed image
 
     rpm-ostree rebase --reboot ostree-image-signed:docker://ghcr.io/ublue-os/VARIANT:40-amd64
 
-#### If you are on an ARM device
-> NOTE: Apple M-series Laptops are not supported by default Fedora ARM, use [Fedora Asahi Remix](https://asahilinux.org/fedora/)
-
-Rebase to the temporary unsigned image
-
-    rpm-ostree rebase --reboot ostree-unverified-registry:ghcr.io/ublue-os/VARIANT:40-arm64
-
-Rebase to the signed image
-
-    rpm-ostree rebase --reboot ostree-image-signed:docker://ghcr.io/ublue-os/VARIANT:40-arm64
-
 ### Enabling the display manager
 
 Log in with your username and password, then run:
