@@ -82,14 +82,11 @@ jobs:
         run: |
           if [[ ${{ matrix.arch }} = "amd64" && ${{ matrix.version }} != "rawhide" ]]; then
             echo "SOURCE_ORG=ghcr.io/ublue-os" >> $GITHUB_ENV
+            echo "SOURCE_IMAGE=${{ matrix.flavor }}-main" >> $GITHUB_ENV
           else
             echo "SOURCE_ORG=quay.io/fedora-ostree-desktops" >> $GITHUB_ENV
-          fi
-          if [[ ${{ matrix.arch }} = "arm64" ]]; then
             echo "SOURCE_IMAGE=${{ matrix.flavor }}" >> $GITHUB_ENV
-          elif [[ ${{ matrix.arch }} = "amd64" ]]; then
-            echo "SOURCE_IMAGE=${{ matrix.flavor }}-main" >> $GITHUB_ENV
-          fi 
+          fi
 
       # Build image using Buildah action
       - name: Build Image
