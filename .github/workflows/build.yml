@@ -80,9 +80,9 @@ jobs:
       # Create Variables. Use UBlue images for amd64, fedora-ostree desktop for arm64
       - name: matrix-variables
         run: |
-          if [[ ${{ matrix.arch }} = "amd64" ]]; then
+          if [[ ${{ matrix.arch }} = "amd64" && ${{ matrix.version }} != "rawhide" ]]; then
             echo "SOURCE_ORG=ghcr.io/ublue-os" >> $GITHUB_ENV
-          elif [[ ${{ matrix.arch }} = "arm64" ]]; then
+          else
             echo "SOURCE_ORG=quay.io/fedora-ostree-desktops" >> $GITHUB_ENV
           fi
           if [[ ${{ matrix.arch }} = "arm64" ]]; then
