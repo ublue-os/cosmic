@@ -21,7 +21,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [amd64, arm64]
+        arch: [amd64]
         version: [39, 40, rawhide]
         flavor: [base, silverblue, kinoite]
     steps:
@@ -76,6 +76,17 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y qemu-user-static
+     
+      # Create Variables. Use UBlue images for amd64, fedora-ostree desktop for arm64
+      - name: matrix-variables
+        run: |
+          if [[ ${{ matrix.arch }} = "amd64" && ${{ matrix.version }} != "rawhide" ]]; then
+            echo "SOURCE_ORG=ghcr.io/ublue-os" >> $GITHUB_ENV
+            echo "SOURCE_IMAGE=${{ matrix.flavor }}-main" >> $GITHUB_ENV
+          else
+            echo "SOURCE_ORG=quay.io/fedora-ostree-desktops" >> $GITHUB_ENV
+            echo "SOURCE_IMAGE=${{ matrix.flavor }}" >> $GITHUB_ENV
+          fi
 
       # Build image using Buildah action
       - name: Build Image
@@ -90,7 +101,8 @@ jobs:
           archs: ${{ matrix.arch }}
           build-args: |
             FEDORA_MAJOR_VERSION=${{ matrix.version }}
-            SOURCE_IMAGE=${{ matrix.flavor }}
+            SOURCE_IMAGE=${{ env.SOURCE_IMAGE }}
+            SOURCE_ORG=${{ env.SOURCE_ORG }}
           oci: false
 
       # Workaround bug where capital letters in your GitHub username make it impossible to push to GHCR.
