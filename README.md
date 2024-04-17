@@ -11,14 +11,14 @@ Go ahead and try one of the ostree images I've created here!
 
 ### Quick Installation
 
-Install a Fedora Atomic Desktop, best [Fedora Silverblue](https://fedoraproject.org/atomic-desktops/silverblue/).
+Install a Fedora Atomic Desktop, like [Fedora Silverblue](https://fedoraproject.org/atomic-desktops/silverblue/).
 
 #### Warning
 This image requires disabling SELinux. **This is NOT recommended for production** and is a temporary situation until this work is finished in upstream Fedora. 
 
     sudo setenforce 0 && getenforce
 
-You can view the selinux config in `/etc/selinux/config`
+You can view the SELinux config in `/etc/selinux/config`
 
 #### Variants
 - `cosmic-base`: Just the COSMIC Desktop
