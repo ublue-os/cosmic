@@ -5,6 +5,8 @@ ARG FEDORA_MAJOR_VERSION="${FEDORA_MAJOR_VERSION:-40}"
 
 FROM ${BASE_IMAGE}:${FEDORA_MAJOR_VERSION}
 
+COPY files/ /
+
 # Setup Copr repo
 RUN wget https://copr.fedorainfracloud.org/coprs/ryanabx/cosmic-epoch/repo/fedora-40/ryanabx-cosmic-epoch-fedora-$(rpm -E %fedora).repo -O /etc/yum.repos.d/_copr_ryanabx-cosmic.repo
 
