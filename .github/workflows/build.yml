@@ -4,7 +4,7 @@ on:
   pull_request:
   merge_group:
   schedule:
-    - cron: '0 15 * * *'  # 3pm UTC everyday (timed against official fedora container pushes)
+    - cron: "0 15 * * *" # 3pm UTC everyday (timed against official fedora container pushes)
   workflow_dispatch:
 
 env:
@@ -12,7 +12,7 @@ env:
 
 jobs:
   build:
-    name: Build 
+    name: Build
     runs-on: ubuntu-22.04
     permissions:
       contents: read
@@ -21,9 +21,27 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [amd64]
-        version: [39, 40, rawhide]
-        flavor: [base, silverblue, kinoite]
+        arch:
+          - amd64
+        version:
+          - 39
+          - 40
+          - rawhide
+        flavor:
+          - base
+          - base-nvidia
+          - silverblue
+          - silverblue-nvidia
+          - kinoite
+          - kinoite-nvidia
+        exclude:
+          - version: rawhide
+            flavor: base-nvidia
+          - version: rawhide
+            flavor: silverblue-nvidia
+          - version: rawhide
+            flavor: kinoite-nvidia
+
     steps:
       # Checkout push-to-registry action GitHub repository
       - name: Checkout Push to Registry action
@@ -50,7 +68,7 @@ jobs:
             BUILD_TAGS+=("${TIMESTAMP}")
             BUILD_TAGS+=("latest-${{ matrix.arch }}")
           fi
-          
+
           alias_tags=("${BUILD_TAGS[@]}")
           echo "Generated the following build tags: "
           for TAG in "${BUILD_TAGS[@]}"; do
@@ -72,17 +90,16 @@ jobs:
             io.artifacthub.package.readme-url=https://raw.githubusercontent.com/ublue-os/cosmic/main/README.md
             io.artifacthub.package.logo-url=https://avatars.githubusercontent.com/u/120078124?s=200&v=4
 
-      - name: Install qemu dependency
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y qemu-user-static
-     
       # Create Variables. Use UBlue images for amd64, fedora-ostree desktop for arm64
       - name: matrix-variables
         run: |
           if [[ ${{ matrix.arch }} = "amd64" && ${{ matrix.version }} != "rawhide" ]]; then
             echo "SOURCE_ORG=ghcr.io/ublue-os" >> $GITHUB_ENV
-            echo "SOURCE_IMAGE=${{ matrix.flavor }}-main" >> $GITHUB_ENV
+            if [[ "${{ matrix.flavor }}" =~ "nvidia" ]]; then
+              echo "SOURCE_IMAGE=${{ matrix.flavor }}" >> $GITHUB_ENV
+            else
+              echo "SOURCE_IMAGE=${{ matrix.flavor }}-main" >> $GITHUB_ENV
+            fi
           else
             echo "SOURCE_ORG=quay.io/fedora-ostree-desktops" >> $GITHUB_ENV
             echo "SOURCE_IMAGE=${{ matrix.flavor }}" >> $GITHUB_ENV
