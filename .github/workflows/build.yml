@@ -102,6 +102,7 @@ jobs:
               echo "SOURCE_IMAGE=${{ matrix.flavor }}" >> $GITHUB_ENV
             else
               echo "SOURCE_IMAGE=${{ matrix.flavor }}-main" >> $GITHUB_ENV
+            fi
           else
             echo "SOURCE_ORG=quay.io/fedora-ostree-desktops" >> $GITHUB_ENV
             echo "SOURCE_IMAGE=${{ matrix.flavor }}" >> $GITHUB_ENV
