@@ -1,0 +1,21 @@
+[Unit]
+Description=Workaround for SELinux issues for greetd
+ConditionFileIsExecutable=/usr/bin/greetd
+After=local-fs.target
+
+[Service]
+Type=oneshot
+# Copy if it doesn't exist
+ExecStartPre=/usr/bin/mkdir -p /usr/local/bin/overrides
+ExecStartPre=/usr/bin/bash -c "[ -x /usr/local/bin/overrides/greetd ] || /usr/bin/cp /usr/bin/greetd /usr/local/bin/overrides/greetd"
+# This is faster than using .mount unit. Also allows for the previous line/cleanup
+ExecStartPre=/usr/bin/bash -c "/usr/bin/mount --bind /usr/local/bin/overrides/greetd /usr/bin/greetd"
+# Fix caps
+ExecStart=/usr/bin/bash -c "/usr/sbin/restorecon -rv /usr/bin/greetd"
+# Clean-up after ourselves
+ExecStop=/usr/bin/umount /usr/bin/greetd
+ExecStop=/usr/bin/rm /usr/local/bin/overrides/greetd
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
