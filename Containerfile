@@ -5,20 +5,40 @@ ARG FEDORA_MAJOR_VERSION="${FEDORA_MAJOR_VERSION:-40}"
 
 FROM ${BASE_IMAGE}:${FEDORA_MAJOR_VERSION}
 
-# Setup Copr repo
-RUN wget https://copr.fedorainfracloud.org/coprs/ryanabx/cosmic-epoch/repo/fedora-40/ryanabx-cosmic-epoch-fedora-$(rpm -E %fedora).repo -O /etc/yum.repos.d/_copr_ryanabx-cosmic.repo
-
-# Install cosmic desktop environment
-RUN rpm-ostree install cosmic-desktop
-
-# Install extras (currently just a power manager and a libsecret manager)
-RUN rpm-ostree install \
-    tuned \
-    gnome-keyring
-
-# Set up display manager
-RUN rm -f /etc/systemd/system/display-manager.service && \
-    ln -s /usr/lib/systemd/system/cosmic-greeter.service /etc/systemd/system/display-manager.service
-
-RUN ostree container commit && \
+# Build in one step
+RUN curl -Lo /etc/yum.repos.d/_copr_ryanabx-cosmic.repo \
+        https://copr.fedorainfracloud.org/coprs/ryanabx/cosmic-epoch/repo/fedora-$(rpm -E %fedora)/ryanabx-cosmic-epoch-fedora-$(rpm -E %fedora).repo && \
+    rpm-ostree install \
+        cosmic-desktop && \
+    rpm-ostree install \
+        tuned \
+        gnome-keyring && \
+    rm -f /etc/systemd/system/display-manager.service && \
+    ln -s /usr/lib/systemd/system/cosmic-greeter.service /etc/systemd/system/display-manager.service && \
+    ln -s /usr/lib/systemd/system/greetd-workaround.service /etc/systemd/system/multi-user.target.wants/gretd-workaround.service && \
+    ostree container commit && \
     mkdir -p /var/tmp && chmod -R 1777 /var/tmp
+
+RUN tee /usr/lib/systemd/system/greetd-workaround.service <<EOF
+[Unit]
+Description=Workaround for SELinux issues for greetd
+ConditionFileIsExecutable=/usr/bin/greetd
+After=local-fs.target
+
+[Service]
+Type=oneshot
+# Copy if it doesn't exist
+ExecStartPre=/usr/bin/mkdir -p /usr/local/bin/overrides
+ExecStartPre=/usr/bin/bash -c "[ -x /usr/local/bin/overrides/greetd ] || /usr/bin/cp /usr/bin/greetd /usr/local/bin/overrides/greetd"
+# This is faster than using .mount unit. Also allows for the previous line/cleanup
+ExecStartPre=/usr/bin/bash -c "/usr/bin/mount --bind /usr/local/bin/overrides/greetd /usr/bin/greetd"
+# Fix caps
+ExecStart=/usr/bin/bash -c "/usr/sbin/restorecon -rv /usr/bin/greetd"
+# Clean-up after ourselves
+ExecStop=/usr/bin/umount /usr/bin/greetd
+ExecStop=/usr/bin/rm /usr/local/bin/overrides/greetd
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
