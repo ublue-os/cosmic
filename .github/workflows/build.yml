@@ -21,17 +21,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [amd64]
-        version: [39, 40, rawhide]
+        arch:
+          - amd64
+        version:
+          - 39
+          - 40
+          - rawhide
         flavor:
-          [
-            base,
-            base-nvidia,
-            silverblue,
-            silverblue-nvidia,
-            kinoite,
-            kinoite-nvidia,
-          ]
+          - base
+          - base-nvidia
+          - silverblue
+          - silverblue-nvidia
+          - kinoite
+          - kinoite-nvidia
         exclude:
           - version: rawhide
             flavor: base-nvidia
