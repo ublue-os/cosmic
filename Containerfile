@@ -9,6 +9,7 @@ ARG FEDORA_MAJOR_VERSION="${FEDORA_MAJOR_VERSION:-40}"
 COPY greetd-workaround.service /usr/lib/systemd/system/greetd-workaround.service
 
 # Build in one step
+# TODO: Use tuned/tuned-ppd when upstream fedora switches
 RUN bash -c "if [[ ${FEDORA_MAJOR_VERSION} == "rawhide" ]]; then \
         curl -Lo /etc/yum.repos.d/_copr_ryanabx-cosmic.repo \
             https://copr.fedorainfracloud.org/coprs/ryanabx/cosmic-epoch/repo/fedora-rawhide/ryanabx-cosmic-epoch-fedora-rawhide.repo \
@@ -18,7 +19,7 @@ RUN bash -c "if [[ ${FEDORA_MAJOR_VERSION} == "rawhide" ]]; then \
     rpm-ostree install \
         cosmic-desktop && \
     rpm-ostree install \
-        power-profiles-daemon \ # TODO: Use tuned/tuned-ppd when upstream fedora switches
+        power-profiles-daemon \
         gnome-keyring && \
     rm -f /etc/systemd/system/display-manager.service && \
     ln -s /usr/lib/systemd/system/cosmic-greeter.service /etc/systemd/system/display-manager.service && \
