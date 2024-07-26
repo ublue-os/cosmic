@@ -18,7 +18,7 @@ RUN bash -c "if [[ ${FEDORA_MAJOR_VERSION} == "rawhide" ]]; then \
     rpm-ostree install \
         cosmic-desktop && \
     rpm-ostree install \
-        tuned \
+        power-profiles-daemon \ # TODO: Use tuned/tuned-ppd when upstream fedora switches
         gnome-keyring && \
     rm -f /etc/systemd/system/display-manager.service && \
     ln -s /usr/lib/systemd/system/cosmic-greeter.service /etc/systemd/system/display-manager.service && \
