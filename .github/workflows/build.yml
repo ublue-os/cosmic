@@ -28,7 +28,6 @@ jobs:
         arch:
           - amd64
         version:
-          - 39
           - 40
           - rawhide
         flavor:
