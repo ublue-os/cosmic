@@ -152,7 +152,7 @@ jobs:
           tags: ${{ steps.build_image.outputs.tags }}
 
       # Sign container
-      - uses: sigstore/cosign-installer@v3.4.0
+      - uses: sigstore/cosign-installer@v3.5.0
         if: github.event_name != 'pull_request'
 
       - name: Sign container image
