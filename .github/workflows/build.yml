@@ -135,12 +135,10 @@ jobs:
           rechunk: 'ghcr.io/hhd-dev/rechunk:v0.8.0'
           ref: 'raw-img'
           prev-ref: "${{ env.IMAGE_REGISTRY }}/cosmic-${{ matrix.flavor }}:${{ matrix.version }}"
-          prev-ref-fail: true
           skip_compression: true
-          version: 'version'
+          version: ${{ matrix.version }}
           labels: |
             org.opencontainers.image.title=cosmic-${{ matrix.flavor }}
-            org.opencontainers.image.version=${{ matrix.version }}
             org.opencontainers.image.description=${{ env.description }}
             io.artifacthub.package.readme-url=https://raw.githubusercontent.com/ublue-os/cosmic/main/README.md
             io.artifacthub.package.logo-url=https://avatars.githubusercontent.com/u/120078124?s=200&v=4
@@ -188,7 +186,7 @@ jobs:
       - name: Sign container image
         if: github.event_name != 'pull_request'
         run: |
-          cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ steps.registry_case.outputs.lowercase }}/${{ steps.build_image.outputs.image }}@${TAGS}
+          cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ steps.registry_case.outputs.lowercase }}/cosmic-${{ matrix.flavor }}@${TAGS}
         env:
           TAGS: ${{ steps.push.outputs.digest }}
           COSIGN_EXPERIMENTAL: false
