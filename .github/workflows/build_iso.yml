@@ -42,7 +42,7 @@ jobs:
           image_tag: ${{ matrix.fedora_version }}-amd64
           secure_boot_key_url: 'https://github.com/ublue-os/akmods/raw/main/certs/public_key.der'
           enrollment_password: 'ublue-os'
-          iso_name: ${{ matrix.image_name }}-${{ steps.generate-tag.outputs.tag }}
+          iso_name: ${{ matrix.image_name }}-${{ matrix.fedora_version }}.iso
 
       - name: Upload ISOs and Checksum to Job Artifacts
         uses: actions/upload-artifact@v4
