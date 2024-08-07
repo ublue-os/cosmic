@@ -122,9 +122,9 @@ jobs:
       # Reprocess raw-img using rechunker which will delete it
       - name: Run Rechunker
         id: rechunk
-        uses: hhd-dev/rechunk@v0.8.0
+        uses: hhd-dev/rechunk@v0.8.1
         with:
-          rechunk: 'ghcr.io/hhd-dev/rechunk:v0.8.0'
+          rechunk: 'ghcr.io/hhd-dev/rechunk:v0.8.1'
           ref: 'raw-img'
           prev-ref: "${{ env.IMAGE_REGISTRY }}/cosmic-${{ matrix.flavor }}:${{ matrix.version }}"
           skip_compression: true
