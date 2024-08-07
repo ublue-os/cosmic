@@ -29,7 +29,6 @@ jobs:
           - amd64
         version:
           - 40
-          - rawhide
         flavor:
           - base
           - base-nvidia
@@ -37,13 +36,6 @@ jobs:
           - silverblue-nvidia
           - kinoite
           - kinoite-nvidia
-        exclude:
-          - version: rawhide
-            flavor: base-nvidia
-          - version: rawhide
-            flavor: silverblue-nvidia
-          - version: rawhide
-            flavor: kinoite-nvidia
 
     steps:
       # Checkout push-to-registry action GitHub repository
