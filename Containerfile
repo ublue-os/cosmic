@@ -16,7 +16,7 @@ RUN if [[ "${FEDORA_MAJOR_VERSION}" == "rawhide" ]]; then \
     rpm-ostree install \
         cosmic-desktop && \
     rpm-ostree install \
-        gnome-keyring && \
+        gnome-keyring NetworkManager-tui && \
     systemctl disable gdm || true && \
     systemctl disable sddm || true && \
     systemctl enable cosmic-greeter && \
