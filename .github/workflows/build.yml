@@ -79,8 +79,8 @@ jobs:
           echo "alias_tags=${alias_tags[*]}" >> $GITHUB_OUTPUT
 
           IMAGE_NAME="cosmic-${{ matrix.flavor }}"
-          if [[[ "$IMAGE_NAME" == base-* ]]]; then
-            IMAGE_NAME="${IMAGE_NAME//base-/}"
+          if [[[ "$IMAGE_NAME" == -base* ]]]; then
+            IMAGE_NAME="${IMAGE_NAME//-base/}"
           fi
           echo "IMAGE_NAME=${IMAGE_NAME}" >> $GITHUB_ENV
 
