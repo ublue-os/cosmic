@@ -43,8 +43,6 @@ jobs:
         uses: ublue-os/remove-unwanted-software@v7
         with:
           remove-android: 'true'
-      - name: Checkout
-        uses: actions/checkout@v2
 
       - name: Checkout Push to Registry action
         uses: actions/checkout@v4
@@ -78,15 +76,21 @@ jobs:
           done
           echo "alias_tags=${alias_tags[*]}" >> $GITHUB_OUTPUT
 
+          IMAGE_NAME="cosmic-${{ matrix.flavor }}"
+          if [[ "$IMAGE_NAME" == *-base* ]]; then
+            IMAGE_NAME="${IMAGE_NAME//-base/}"
+          fi
+          echo "IMAGE_NAME=${IMAGE_NAME}" >> $GITHUB_ENV
+
       # Build metadata
       - name: Image Metadata
         uses: docker/metadata-action@v5
         id: meta
         with:
           images: |
-            cosmic-${{ matrix.flavor }}
+            ${{ env.IMAGE_NAME }}
           labels: |
-            org.opencontainers.image.title=cosmic-${{ matrix.flavor }}
+            org.opencontainers.image.title=${{ env.IMAGE_NAME }}
             org.opencontainers.image.version=${{ matrix.version }}
             org.opencontainers.image.description=${{ env.description }}
             io.artifacthub.package.readme-url=https://raw.githubusercontent.com/ublue-os/cosmic/main/README.md
@@ -126,11 +130,11 @@ jobs:
         with:
           rechunk: 'ghcr.io/hhd-dev/rechunk:v0.8.1'
           ref: 'raw-img'
-          prev-ref: "${{ env.IMAGE_REGISTRY }}/cosmic-${{ matrix.flavor }}:${{ matrix.version }}"
+          prev-ref: "${{ env.IMAGE_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.version }}"
           skip_compression: true
           version: ${{ matrix.version }}
           labels: |
-            org.opencontainers.image.title=cosmic-${{ matrix.flavor }}
+            org.opencontainers.image.title=${{ env.IMAGE_NAME }}
             org.opencontainers.image.description=${{ env.description }}
             io.artifacthub.package.readme-url=https://raw.githubusercontent.com/ublue-os/cosmic/main/README.md
             io.artifacthub.package.logo-url=https://avatars.githubusercontent.com/u/120078124?s=200&v=4
@@ -140,7 +144,7 @@ jobs:
           IMAGE=$(podman pull ${{ steps.rechunk.outputs.ref }})
           sudo rm -rf ${{ steps.rechunk.outputs.output }}
           for tag in ${{ steps.generate-tags.outputs.alias_tags }}; do
-            podman tag $IMAGE cosmic-${{ matrix.flavor }}:$tag
+            podman tag $IMAGE ${{ env.IMAGE_NAME }}:$tag
           done
 
       # Workaround bug where capital letters in your GitHub username make it impossible to push to GHCR.
@@ -166,7 +170,7 @@ jobs:
         id: push
         with:
           registry: ${{ steps.registry_case.outputs.lowercase }}
-          image: cosmic-${{ matrix.flavor }}
+          image: ${{ env.IMAGE_NAME }}
           tags: ${{ steps.generate-tags.outputs.alias_tags }}
           extra-args: |
             --disable-content-trust
@@ -178,7 +182,7 @@ jobs:
       - name: Sign container image
         if: github.event_name != 'pull_request'
         run: |
-          cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ steps.registry_case.outputs.lowercase }}/cosmic-${{ matrix.flavor }}@${TAGS}
+          cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ steps.registry_case.outputs.lowercase }}/${{ env.IMAGE_NAME }}@${TAGS}
         env:
           TAGS: ${{ steps.push.outputs.digest }}
           COSIGN_EXPERIMENTAL: false
