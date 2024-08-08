@@ -80,7 +80,7 @@ jobs:
 
           IMAGE_NAME="cosmic-${{ matrix.flavor }}"
           if [[[ "$IMAGE_NAME" == base-* ]]]; then
-            echo "IMAGE_NAME=${IMAGE_NAME//base-/}" >> $GITHUB_ENV
+            IMAGE_NAME="${IMAGE_NAME//base-/}"
           fi
           echo "IMAGE_NAME=${IMAGE_NAME}" >> $GITHUB_ENV
 
