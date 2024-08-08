@@ -3,7 +3,7 @@
 
 > NOTES:
 > These images are not associated with System76! If you have issues, please understand they might be COSMIC related, OR they might be related to this image.
-> The COSMIC Desktop Environment is still PRE ALPHA. Do not daily drive this image on your main workstation unless you know what you're doing.
+> The COSMIC Desktop Environment is still ALPHA. Do not daily drive this image on your main workstation unless you know what you're doing.
 
 Like Fedora? Want to try the latest from the work in progress Cosmic Desktop Environment? Want to help find bugs and/or contribute to Cosmic development, but don't want to work in a VM or install Pop!_OS? None of the above things but something else??!?
 
@@ -13,15 +13,9 @@ Go ahead and try one of the ostree images I've created here!
 
 Install a Fedora Atomic Desktop, like [Fedora Silverblue](https://fedoraproject.org/atomic-desktops/silverblue/).
 
-#### Warning
-This image requires disabling SELinux. **This is NOT recommended for production** and is a temporary situation until this work is finished in upstream Fedora. 
-
-    sudo setenforce 0 && getenforce
-
-You can view the SELinux config in `/etc/selinux/config`
 
 #### Variants
-- `cosmic-base`: Just the COSMIC Desktop
+- `cosmic`: Just the COSMIC Desktop
 - `cosmic-silverblue`: Recommended, Fedora Silverblue with COSMIC Desktop added
 - `cosmic-kinoite`: Fedora Kinoite with COSMIC Desktop addded
 
@@ -34,6 +28,29 @@ Rebase to the temporary unsigned image
 Rebase to the signed image
 
     rpm-ostree rebase --reboot ostree-image-signed:docker://ghcr.io/ublue-os/VARIANT:40-amd64
+
+
+### Secure Boot
+
+Secure Boot is supported by default on our systems, providing an additional layer of security. After the first installation, you will be prompted to enroll the secure boot key in the BIOS.
+
+Enter the password `universalblue` 
+when prompted to enroll our key.
+
+If this step is not completed during the initial setup, you can manually enroll the key by running the following command in the terminal:
+
+`
+ujust enroll-secure-boot-key
+`
+
+Secure boot is supported with our custom key. The pub key can be found in the root of the akmods repository [here](https://github.com/ublue-os/akmods/raw/main/certs/public_key.der).
+If you'd like to enroll this key prior to installation or rebase, download the key and run the following:
+
+```bash
+sudo mokutil --timeout -1
+sudo mokutil --import secure_boot.der
+```
+
 
 ### Enabling the display manager
 
