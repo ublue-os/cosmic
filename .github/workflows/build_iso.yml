@@ -24,7 +24,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image_name: [cosmic-silverblue, cosmic-base, cosmic-silverblue-nvidia, cosmic-base-nvidia]
+        image_name: [cosmic, cosmic-nvidia, cosmic-silverblue,cosmic-silverblue-nvidia]
         fedora_version: [40]
 
     steps:
