@@ -8,7 +8,8 @@ FROM ghcr.io/ublue-os/config:latest as config
 FROM ${BASE_IMAGE}:${FEDORA_MAJOR_VERSION}
 ARG FEDORA_MAJOR_VERSION="${FEDORA_MAJOR_VERSION:-40}"
 
-COPY --from=config /rpms /tmp/rpms
+COPY --from=ghcr.io/ublue-os/config:latest /files/ublue-os/udev-rules /
+COPY --from=ghcr.io/ublue-os/config:latest /files/ublue-os/update-services /
 
 # Build in one step
 RUN if [[ "${FEDORA_MAJOR_VERSION}" == "rawhide" ]]; then \
@@ -21,8 +22,6 @@ RUN if [[ "${FEDORA_MAJOR_VERSION}" == "rawhide" ]]; then \
         cosmic-desktop && \
     rpm-ostree install \
         gnome-keyring NetworkManager-tui && \
-    rpm-ostree install \
-        /tmp/rpms/*.rpm
     systemctl disable gdm || true && \
     systemctl disable sddm || true && \
     systemctl enable cosmic-greeter && \
