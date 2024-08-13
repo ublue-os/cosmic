@@ -38,7 +38,7 @@ jobs:
       - name: Get Flatpak dependencies
         id: flatpak-dependencies
         env:
-          IMAGE_FULL: ${{ env.IMAGE_REGISTRY }}/${{ inputs.image_name }}:${{ env.IMAGE_TAG }}
+          IMAGE_FULL: ${{ env.IMAGE_REGISTRY }}/${{ matrix.image_name }}:${{ env.IMAGE_TAG }}
         shell: bash
         run: |
           set -euox pipefail
@@ -57,6 +57,8 @@ jobs:
           while IFS= read -r line; do
             FLATPAK_REFS+=("$line")
           done < "${FLATPAK_REFS_DIR}/flatpaks.txt"
+
+          echo "Flatpak refs: ${FLATPAK_REFS[@]}"
 
           # Generate installation script
           cat <<EOF > "${TEMP_FLATPAK_INSTALL_DIR}/install-flatpaks.sh"
