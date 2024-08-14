@@ -14,11 +14,13 @@ RUN if [[ "${FEDORA_MAJOR_VERSION}" == "rawhide" ]]; then \
             https://copr.fedorainfracloud.org/coprs/ryanabx/cosmic-epoch/repo/fedora-$(rpm -E %fedora)/ryanabx-cosmic-epoch-fedora-$(rpm -E %fedora).repo \
     ; fi && \
     rpm-ostree install \
-        cosmic-desktop && \
+        cosmic-desktop \
+        power-profiles-daemon && \
     rpm-ostree install \
         gnome-keyring NetworkManager-tui && \
     systemctl disable gdm || true && \
     systemctl disable sddm || true && \
     systemctl enable cosmic-greeter && \
+    systemctl enable power-profiles-daemon && \
     ostree container commit && \
     mkdir -p /var/tmp && chmod -R 1777 /var/tmp
