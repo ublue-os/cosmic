@@ -23,11 +23,11 @@ Install a Fedora Atomic Desktop, like [Fedora Silverblue](https://fedoraproject.
 
 Rebase to the temporary unsigned image
 
-    rpm-ostree rebase --reboot ostree-unverified-registry:ghcr.io/ublue-os/VARIANT:40-amd64
+    rpm-ostree rebase --reboot ostree-unverified-registry:ghcr.io/outbackdingo/cosmic-nvidia:40-amd64
 
 Rebase to the signed image
 
-    rpm-ostree rebase --reboot ostree-image-signed:docker://ghcr.io/ublue-os/VARIANT:40-amd64
+    rpm-ostree rebase --reboot ostree-image-signed:docker://ghcr.io/outbackdingo/cosmic-nvidia:40-amd64
 
 
 ### Secure Boot
