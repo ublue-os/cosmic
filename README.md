@@ -29,7 +29,7 @@ This is to ensure that the image is as flexible and unopinionated as possible.
 
 ## Installation
 
-Download an ISO from the latest [GitHub Actions build artifacts](https://github.com/ublue-os/cosmic/actions/workflows/build_iso.yml?query=branch%3Amain+is%3Asuccess)
+Download an ISO from the latest [GitHub Actions build artifacts](https://github.com/ublue-os/cosmic/actions/workflows/build_iso.yml?query=branch%3Amain+is%3Asuccess). GitHub requires you be logged in to download.
 
 ### Variants
 
