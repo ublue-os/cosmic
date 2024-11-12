@@ -28,7 +28,7 @@ jobs:
         arch:
           - amd64
         version:
-          - 40
+          - 41
         flavor:
           - base
           - base-nvidia
@@ -64,7 +64,7 @@ jobs:
           COMMIT_TAGS+=("${SHA_SHORT}${MAJOR_VERSION:+-$MAJOR_VERSION}")
           BUILD_TAGS=("${MAJOR_VERSION}" "${MAJOR_VERSION}-${{ matrix.arch }}" "${MAJOR_VERSION:+$MAJOR_VERSION-}${TIMESTAMP}" "${MAJOR_VERSION:+$MAJOR_VERSION-}${TIMESTAMP}-${{ matrix.arch }}")
           # --
-          if [ "${MAJOR_VERSION}" == "40" ]; then
+          if [ "${MAJOR_VERSION}" == "41" ]; then
             BUILD_TAGS+=("${TIMESTAMP}")
             BUILD_TAGS+=("latest-${{ matrix.arch }}")
           fi
