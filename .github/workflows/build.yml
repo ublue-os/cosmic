@@ -28,7 +28,7 @@ jobs:
         arch:
           - amd64
         version:
-          - 40
+          - 41
         flavor:
           - base
           - base-nvidia
