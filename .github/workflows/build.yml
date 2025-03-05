@@ -40,7 +40,7 @@ jobs:
     steps:
       # Checkout push-to-registry action GitHub repository
       - name: Maximize build space
-        uses: ublue-os/remove-unwanted-software@v8
+        uses: ublue-os/remove-unwanted-software@v9
         with:
           remove-android: 'true'
 
