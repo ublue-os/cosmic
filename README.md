@@ -1,7 +1,7 @@
 # Fedora Atomic Cosmic
 
 # THIS IMAGE IS DEPRECATED
-Use: https://github.com/ublue-os/main/pkgs/container/cosmic-atomic-main
+### Use: https://github.com/ublue-os/main/pkgs/container/cosmic-atomic-main
 
 Fedora Atomic Desktop with the COSMIC Desktop Environment included.
 
